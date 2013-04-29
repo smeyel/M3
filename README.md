@@ -1,4 +1,7 @@
 M3
 ==
 
-M1 measurement of the SMEyeL project
+M3 measurement of the SMEyeL project
+
+For further information, visit
+https://www.aut.bme.hu/Pages/ResearchEn/SMEyeL/Overview
