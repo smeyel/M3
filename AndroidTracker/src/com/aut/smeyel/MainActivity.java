@@ -24,7 +24,7 @@ import com.aut.smeyel.R;
 
 public class MainActivity extends Activity implements CvCameraViewListener2, View.OnTouchListener {
 	
-	private static final String TAG = "SMEyeL::MainActivity";
+	private static final String TAG = "SMEyeL::AndroidTracker::MainActivity";
 	private CameraBridgeViewBase mOpenCvCameraView;
 	private Mat mRgba;
 	private Mat mGray;
@@ -43,7 +43,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2, Vie
                     /* OpenCV specific init, for example: enable camera view */
                     
                     // Load native library after(!) OpenCV initialization
-                    System.loadLibrary("native_sample");
+                    System.loadLibrary("native_module");
                     
                     mOpenCvCameraView.setOnTouchListener(MainActivity.this);
                     mOpenCvCameraView.enableView();
