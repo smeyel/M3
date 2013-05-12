@@ -31,6 +31,12 @@ public class MainActivity extends Activity implements CvCameraViewListener2, Vie
 	
 	private Mat mResult;
 	
+	public static boolean openCVLoaded = false;
+	public static final int SERVERPORT = 6000;
+	public static final int MSG_ID = 0x1337;
+	
+	Thread myCommsThread = null;
+	
 	private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
 
         @Override
@@ -39,6 +45,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2, Vie
                 case LoaderCallbackInterface.SUCCESS:
                 {
                     Log.i(TAG, "OpenCV loaded successfully");
+                    openCVLoaded = true;
 
                     /* OpenCV specific init, for example: enable camera view */
                     
@@ -74,6 +81,9 @@ public class MainActivity extends Activity implements CvCameraViewListener2, Vie
 		
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.opencv_start_surface_view);
         mOpenCvCameraView.setCvCameraViewListener(this);
+        
+        myCommsThread = new Thread(new CommsThread());
+		myCommsThread.start();
 	}
 
 	@Override
@@ -101,6 +111,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2, Vie
 		if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
 		Release();
+		myCommsThread.interrupt();
     }
 
     @Override
@@ -116,6 +127,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2, Vie
         if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
         Release();
+        myCommsThread.interrupt();
     }
 
 	@Override
@@ -162,5 +174,6 @@ public class MainActivity extends Activity implements CvCameraViewListener2, Vie
 	public native void Init(int width, int height, String configFileLocation);
 	public native void FastColor(long matAddrInput, long matAddrResult);
 	public native void Release();
+	
 
 }

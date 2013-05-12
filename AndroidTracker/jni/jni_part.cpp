@@ -34,6 +34,10 @@ const char* intToCharStar(int i) {
 	return stringToCharStar(intToString(i));
 }
 
+double lastKnownX = 0.0;
+double lastKnownY = 0.0;
+bool lastKnownValid = false;
+
 class ResultExporter : public TwoColorCircleMarker::DetectionResultExporterBase
 {
 //	ofstream stream;
@@ -58,8 +62,13 @@ public:
 //		marker->exportToTextStream(&stream);
 //		LOGD("aaaaaamarkerfound");
 //		stream << endl;
-		int valid = marker->isCenterValid ? 1 : 0;
-		Logger::log(Logger::LOGLEVEL_INFO, LOG_TAG, "Position: %f %f Valid: %d\n", marker->center.x, marker->center.y, valid);
+
+		lastKnownX =  marker->center.x;
+		lastKnownY =  marker->center.y;
+		lastKnownValid = marker->isCenterValid;
+
+		int valid = lastKnownValid ? 1 : 0;
+		Logger::log(Logger::LOGLEVEL_INFO, LOG_TAG, "Position: %f %f Valid: %d\n", lastKnownX, lastKnownY, valid);
 	}
 };
 
@@ -228,6 +237,29 @@ JNIEXPORT void JNICALL Java_com_aut_smeyel_MainActivity_Release(JNIEnv*, jobject
 		delete logger;
 		logger = NULL;
 	}
+
+}
+
+// pulling data, a method with push would be good
+JNIEXPORT jobject JNICALL Java_com_aut_smeyel_CommsThread_GetLastKnownPosition(JNIEnv* env, jobject thisObj);
+
+JNIEXPORT jobject JNICALL Java_com_aut_smeyel_CommsThread_GetLastKnownPosition(JNIEnv* env, jobject thisObj)
+{
+	jclass trackerData = env->FindClass("com/aut/smeyel/TrackerData");
+	jmethodID cid = env->GetMethodID(trackerData,"<init>","()V");
+	jobject out = env->NewObject(trackerData, cid);
+
+	jfieldID fid_x = env->GetFieldID(trackerData , "posx", "D");
+	env->SetDoubleField(out, fid_x, lastKnownX);
+
+	jfieldID fid_y = env->GetFieldID(trackerData , "posy", "D");
+	env->SetDoubleField(out, fid_y, lastKnownY);
+
+	jfieldID fid_b = env->GetFieldID(trackerData , "valid", "Z");
+	env->SetBooleanField(out, fid_b, lastKnownValid);
+
+	return out;
+
 
 }
 }
