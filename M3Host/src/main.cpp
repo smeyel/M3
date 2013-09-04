@@ -13,7 +13,8 @@ int main()
 
 	PhoneProxy proxy;
 	cout << "Connecting..." << endl;
-	proxy.Connect("192.168.0.8", 6000);
+	//proxy.Connect("192.168.0.8", 6000);
+	proxy.Connect("127.0.0.1", 6000);
 
 	while(running)
 	{

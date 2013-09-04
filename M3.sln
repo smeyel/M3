@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "M3Host", "M3Host\M3Host.vcxproj", "{3070B3E8-D261-490D-B79D-72F14FEB5DEB}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libCommunication", "Framework\libCommunication\libCommunication.vcxproj", "{9E89C9BD-92D5-46A6-B7AB-B59A0DDFB391}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libLogConfigTime", "Framework\libLogConfigTime\libLogConfigTime.vcxproj", "{8927A516-DE0F-4550-AE3F-14876252F716}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libPlatformSpecifics", "Framework\libPlatformSpecifics\libPlatformSpecifics.vcxproj", "{5C2ABDC3-6E47-40C0-80A1-A020F188F756}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +27,10 @@ Global
 		{8927A516-DE0F-4550-AE3F-14876252F716}.Debug|Win32.Build.0 = Debug|Win32
 		{8927A516-DE0F-4550-AE3F-14876252F716}.Release|Win32.ActiveCfg = Release|Win32
 		{8927A516-DE0F-4550-AE3F-14876252F716}.Release|Win32.Build.0 = Release|Win32
+		{5C2ABDC3-6E47-40C0-80A1-A020F188F756}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5C2ABDC3-6E47-40C0-80A1-A020F188F756}.Debug|Win32.Build.0 = Debug|Win32
+		{5C2ABDC3-6E47-40C0-80A1-A020F188F756}.Release|Win32.ActiveCfg = Release|Win32
+		{5C2ABDC3-6E47-40C0-80A1-A020F188F756}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
