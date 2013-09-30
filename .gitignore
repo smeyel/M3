@@ -4,3 +4,4 @@ libs/
 obj/
 proguard.cfg
 *.txt
+Debug/
