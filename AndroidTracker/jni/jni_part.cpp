@@ -8,7 +8,7 @@
 #include "MarkerCC2Tracker.h"
 #include "DetectionResultExporterBase.h"
 #include "TimeMeasurementCodeDefines.h"
-#include "ConfigManagerBase.h"
+#include "SimpleIniConfigReader.h"
 #include "AndroidLogger.h"
 
 #define LOG_TAG "SMEyeL"
@@ -16,7 +16,7 @@
 using namespace std;
 using namespace cv;
 using namespace TwoColorCircleMarker;
-using namespace Logging;
+//using namespace LogConfigTime;
 
 const char* stringToCharStar(string str) {
 	const char *cstr = str.c_str();
@@ -68,27 +68,35 @@ public:
 		lastKnownValid = marker->isCenterValid;
 
 		int valid = lastKnownValid ? 1 : 0;
-		Logger::log(Logger::LOGLEVEL_INFO, LOG_TAG, "Position: %f %f Valid: %d\n", lastKnownX, lastKnownY, valid);
+		Logger::getInstance()->Log(Logger::LOGLEVEL_INFO, LOG_TAG, "Position: %f %f Valid: %d\n", lastKnownX, lastKnownY, valid);
 	}
 };
 
-class MyConfigManager : public MiscTimeAndConfig::ConfigManagerBase
+class MyConfigManager
 {
 	// This method is called by init of the base class to read the configuration values.
-	virtual bool readConfiguration(CSimpleIniA *ini)
+	virtual bool readConfiguration(char *filename)
 	{
-		resizeImage = ini->GetBoolValue("Main","resizeImage",false,NULL);
-		showInputImage = ini->GetBoolValue("Main","showInputImage",false,NULL);
-		verboseColorCodedFrame = ini->GetBoolValue("Main","verboseColorCodedFrame",false,NULL);
-		verboseOverlapMask = ini->GetBoolValue("Main","verboseOverlapMask",false,NULL);
-		waitFor25Fps = ini->GetBoolValue("Main","waitFor25Fps",false,NULL);
-		pauseIfNoValidMarkers = ini->GetBoolValue("Main","pauseIfNoValidMarkers",false,NULL);
-		waitKeyPressAtEnd = ini->GetBoolValue("Main","waitKeyPressAtEnd",false,NULL);
-		runMultipleIterations = ini->GetBoolValue("Main","runMultipleIterations",false,NULL);
+		SimpleIniConfigReader *SIreader = new SimpleIniConfigReader(filename);
+		ConfigReader *reader = SIreader;
+
+		resizeImage = reader->getBoolValue("Main","resizeImage");
+		showInputImage = reader->getBoolValue("Main","showInputImage");
+		verboseColorCodedFrame = reader->getBoolValue("Main","verboseColorCodedFrame");
+		verboseOverlapMask = reader->getBoolValue("Main","verboseOverlapMask");
+		waitFor25Fps = reader->getBoolValue("Main","waitFor25Fps");
+		pauseIfNoValidMarkers = reader->getBoolValue("Main","pauseIfNoValidMarkers");
+		waitKeyPressAtEnd = reader->getBoolValue("Main","waitKeyPressAtEnd");
+		runMultipleIterations = reader->getBoolValue("Main","runMultipleIterations");
 		return true;
 	}
 
 public:
+
+	void init(char *filename)
+	{
+		readConfiguration(filename);
+	}
 	// --- Settings
 	bool resizeImage;
 	bool pauseIfNoValidMarkers;
@@ -178,7 +186,7 @@ JNIEXPORT void JNICALL Java_com_aut_smeyel_MainActivity_Init(JNIEnv* env, jobjec
 	env->ReleaseStringUTFChars(configFileLocation, configfilenameConst);
 
 	logger = new AndroidLogger();
-	Logger::registerLogger(*logger);
+//	Logger::registerLogger(*logger);
 //	Logger::log(Logger::LOGLEVEL_ERROR, LOG_TAG, "Szam:%d %d %s %d\n", 1, 2, "Hello", 3);
 
 	configManager.init(configfilename);
@@ -215,12 +223,12 @@ JNIEXPORT void JNICALL Java_com_aut_smeyel_MainActivity_FastColor(JNIEnv*, jobje
 //	cvtColor(*mOut, mResult, COLOR_BGR2RGBA);
 	cvtColor(mInputBgr, mResult, COLOR_BGR2RGBA);
 
-//	Logger::log(Logger::LOGLEVEL_INFO, LOG_TAG, "ProcessAll: %f ms", tracker->timeMeasurement->getavgms(TimeMeasurementCodeDefs::ProcessAll));
-//	Logger::log(Logger::LOGLEVEL_INFO, LOG_TAG, "FastColorFilter: %f ms", tracker->timeMeasurement->getavgms(TimeMeasurementCodeDefs::FastColorFilter));
-//	Logger::log(Logger::LOGLEVEL_INFO, LOG_TAG, "VisualizeDecomposedImage: %f ms", tracker->timeMeasurement->getavgms(TimeMeasurementCodeDefs::VisualizeDecomposedImage));
-//	Logger::log(Logger::LOGLEVEL_INFO, LOG_TAG, "TwoColorLocator: %f ms", tracker->timeMeasurement->getavgms(TimeMeasurementCodeDefs::TwoColorLocator));
-//	Logger::log(Logger::LOGLEVEL_INFO, LOG_TAG, "LocateMarkers: %f ms", tracker->timeMeasurement->getavgms(TimeMeasurementCodeDefs::LocateMarkers));
-//	Logger::log(Logger::LOGLEVEL_INFO, LOG_TAG, "---------------------");
+//	Logger::getInstance()->Log(Logger::LOGLEVEL_INFO, LOG_TAG, "ProcessAll: %f ms", tracker->timeMeasurement->getavgms(TimeMeasurementCodeDefs::ProcessAll));
+//	Logger::getInstance()->Log(Logger::LOGLEVEL_INFO, LOG_TAG, "FastColorFilter: %f ms", tracker->timeMeasurement->getavgms(TimeMeasurementCodeDefs::FastColorFilter));
+//	Logger::getInstance()->Log(Logger::LOGLEVEL_INFO, LOG_TAG, "VisualizeDecomposedImage: %f ms", tracker->timeMeasurement->getavgms(TimeMeasurementCodeDefs::VisualizeDecomposedImage));
+//	Logger::getInstance()->Log(Logger::LOGLEVEL_INFO, LOG_TAG, "TwoColorLocator: %f ms", tracker->timeMeasurement->getavgms(TimeMeasurementCodeDefs::TwoColorLocator));
+//	Logger::getInstance()->Log(Logger::LOGLEVEL_INFO, LOG_TAG, "LocateMarkers: %f ms", tracker->timeMeasurement->getavgms(TimeMeasurementCodeDefs::LocateMarkers));
+//	Logger::getInstance()->Log(Logger::LOGLEVEL_INFO, LOG_TAG, "---------------------");
 
 }
 
