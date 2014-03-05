@@ -8,6 +8,7 @@
 
 #include "ObjectTracker.h"
 #include "DetectionParameters.h"
+#include "Ball.h"
 
 using namespace cv;
 using namespace std;
@@ -15,6 +16,7 @@ using namespace std;
 class BallTracker : public ObjectTracker{
 
 	vector<vector<Point>> kontur;
+	vector<Ball> Balls;
 	Mat imgHSV, imgThresh;
 
 public:
