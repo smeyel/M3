@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libPlatformSpecifics", "Fra
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lib3dWorld", "Tracking\lib3dWorld\lib3dWorld.vcxproj", "{F0B1D97E-EC76-4EB1-8421-F73CF5881A69}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libCameraAbstraction", "Framework\libCameraAbstraction\libCameraAbstraction.vcxproj", "{A3E85482-DB13-4D6A-8DEC-C07B6F29AAC7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -39,6 +41,10 @@ Global
 		{F0B1D97E-EC76-4EB1-8421-F73CF5881A69}.Debug|Win32.Build.0 = Debug|Win32
 		{F0B1D97E-EC76-4EB1-8421-F73CF5881A69}.Release|Win32.ActiveCfg = Release|Win32
 		{F0B1D97E-EC76-4EB1-8421-F73CF5881A69}.Release|Win32.Build.0 = Release|Win32
+		{A3E85482-DB13-4D6A-8DEC-C07B6F29AAC7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A3E85482-DB13-4D6A-8DEC-C07B6F29AAC7}.Debug|Win32.Build.0 = Debug|Win32
+		{A3E85482-DB13-4D6A-8DEC-C07B6F29AAC7}.Release|Win32.ActiveCfg = Release|Win32
+		{A3E85482-DB13-4D6A-8DEC-C07B6F29AAC7}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
