@@ -107,6 +107,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Ball.cpp" />
     <ClCompile Include="src\BallTracker.cpp" />
     <ClCompile Include="src\DetectionParameters.cpp" />
     <ClCompile Include="src\LaserPointerTracker.cpp" />
@@ -116,6 +117,7 @@
     <ClCompile Include="src\TrackerCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Ball.h" />
     <ClInclude Include="include\BallTracker.h" />
     <ClInclude Include="include\CameraRemoteConfigManager.h" />
     <ClInclude Include="include\DetectionParameters.h" />

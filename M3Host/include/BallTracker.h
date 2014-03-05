@@ -14,8 +14,8 @@ using namespace std;
 
 class BallTracker : public ObjectTracker{
 
-	DetectionParameters detectionParameters;
-	vector<Vec3f> lastFoundObjectCoords;
+	vector<vector<Point>> kontur;
+	Mat imgHSV, imgThresh;
 
 public:
 	BallTracker();
