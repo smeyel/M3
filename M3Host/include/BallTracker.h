@@ -24,7 +24,8 @@ public:
 
 	void processFrame(Mat& img);
 	void init(const char *configfilename);
-
+	int SquareDistance(Point2i &First, Point2i &Second);
+	int FindClosestVisibleBall(Point2i &NewBall);
 	~BallTracker();
 };
 

@@ -15,13 +15,15 @@ using namespace std;
 class Ball
 {
 	vector<Point2i> Position;
-	Point2i PredictedPosition;
 	bool visible;
 public:
 	Ball();
+	Ball(Point2i &StartPoint);
 	void DrawLine(Mat &img);
+	int GetSize();
+	Point2i GetPosition();
 	void UpdatePosition(Point2i &pos);
-	void PredictPosition();
+	Point2i PredictPosition();
 	void SetVisible(bool isVisible);
 	bool GetVisible();
 	~Ball();

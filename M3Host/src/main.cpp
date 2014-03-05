@@ -20,7 +20,7 @@ using namespace std;
 
 int main()
 {
-
+	 
 	bool running = true;
 	int frameIdx = 0;
 	LogConfigTime::StdoutLogger logger;
