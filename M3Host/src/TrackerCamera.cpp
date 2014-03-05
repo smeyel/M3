@@ -62,11 +62,7 @@ void TrackerCamera::startTracking(){
 	{
 		bool calibrated = 0;
 
-		while (!camProxy->CaptureAndTryCalibration(1));
-		calibrated = true;
-		imshow("chessboard", *camProxy->lastImageTaken);
-
-		char ch = cv::waitKey(0);
+		if (camProxy->CaptureUntilCalibrated(30)) calibrated = true;
 
 		if (!calibrated)
 			cout << "Camera is not calibrated!" << endl;

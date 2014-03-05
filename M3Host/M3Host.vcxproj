@@ -87,6 +87,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Framework\libCameraAbstraction\libCameraAbstraction.vcxproj">
+      <Project>{a3e85482-db13-4d6a-8dec-c07b6f29aac7}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Framework\libCommunication\libCommunication.vcxproj">
       <Project>{9e89c9bd-92d5-46a6-b7ab-b59a0ddfb391}</Project>
     </ProjectReference>
@@ -96,9 +99,31 @@
     <ProjectReference Include="..\Framework\libPlatformSpecifics\libPlatformSpecifics.vcxproj">
       <Project>{5c2abdc3-6e47-40c0-80a1-a020f188f756}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Framework\libVideoInput\libVideoInput.vcxproj">
+      <Project>{f0b55c60-9485-43e1-87e2-ede6a73cceef}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Tracking\lib3dWorld\lib3dWorld.vcxproj">
+      <Project>{f0b1d97e-ec76-4eb1-8421-f73cf5881a69}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\BallTracker.cpp" />
+    <ClCompile Include="src\DetectionParameters.cpp" />
+    <ClCompile Include="src\LaserPointerTracker.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\ObjectTracker.cpp" />
+    <ClCompile Include="src\RemoteTrackerDevice.cpp" />
+    <ClCompile Include="src\TrackerCamera.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\BallTracker.h" />
+    <ClInclude Include="include\CameraRemoteConfigManager.h" />
+    <ClInclude Include="include\DetectionParameters.h" />
+    <ClInclude Include="include\LaserPointerTracker.h" />
+    <ClInclude Include="include\ObjectTracker.h" />
+    <ClInclude Include="include\RemoteTrackerDevice.h" />
+    <ClInclude Include="include\TrackerCamera.h" />
+    <ClInclude Include="include\TrackerConfigManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

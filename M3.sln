@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "M3Host", "M3Host\M3Host.vcxproj", "{3070B3E8-D261-490D-B79D-72F14FEB5DEB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F0B55C60-9485-43E1-87E2-EDE6A73CCEEF} = {F0B55C60-9485-43E1-87E2-EDE6A73CCEEF}
+		{F0B1D97E-EC76-4EB1-8421-F73CF5881A69} = {F0B1D97E-EC76-4EB1-8421-F73CF5881A69}
+		{A3E85482-DB13-4D6A-8DEC-C07B6F29AAC7} = {A3E85482-DB13-4D6A-8DEC-C07B6F29AAC7}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libCommunication", "Framework\libCommunication\libCommunication.vcxproj", "{9E89C9BD-92D5-46A6-B7AB-B59A0DDFB391}"
 EndProject
@@ -14,6 +19,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lib3dWorld", "Tracking\lib3dWorld\lib3dWorld.vcxproj", "{F0B1D97E-EC76-4EB1-8421-F73CF5881A69}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libCameraAbstraction", "Framework\libCameraAbstraction\libCameraAbstraction.vcxproj", "{A3E85482-DB13-4D6A-8DEC-C07B6F29AAC7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libVideoInput", "Framework\libVideoInput\libVideoInput.vcxproj", "{F0B55C60-9485-43E1-87E2-EDE6A73CCEEF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +52,10 @@ Global
 		{A3E85482-DB13-4D6A-8DEC-C07B6F29AAC7}.Debug|Win32.Build.0 = Debug|Win32
 		{A3E85482-DB13-4D6A-8DEC-C07B6F29AAC7}.Release|Win32.ActiveCfg = Release|Win32
 		{A3E85482-DB13-4D6A-8DEC-C07B6F29AAC7}.Release|Win32.Build.0 = Release|Win32
+		{F0B55C60-9485-43E1-87E2-EDE6A73CCEEF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F0B55C60-9485-43E1-87E2-EDE6A73CCEEF}.Debug|Win32.Build.0 = Debug|Win32
+		{F0B55C60-9485-43E1-87E2-EDE6A73CCEEF}.Release|Win32.ActiveCfg = Release|Win32
+		{F0B55C60-9485-43E1-87E2-EDE6A73CCEEF}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
