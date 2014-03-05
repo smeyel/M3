@@ -25,7 +25,7 @@ int BallTracker::FindClosestVisibleBall(Point2i &NewBall)
 				if (SquareDistance(NewBall, Balls[i].GetPosition())<SquareDistance(NewBall, Balls[ClosestBall].GetPosition()))
 					ClosestBall = i;
 		}
-		if (SquareDistance(NewBall, Balls[ClosestBall].GetPosition()) > 10000)
+		if (SquareDistance(NewBall, Balls[ClosestBall].GetPosition()) > 2500)
 			return -1;
 	}
 	return ClosestBall;

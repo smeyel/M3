@@ -66,7 +66,7 @@ void TrackerCamera::startTracking(){
 
 		if (!calibrated)
 			cout << "Camera is not calibrated!" << endl;
-		for (int i = 0;i<115; i++)
+		for (int i = 0;; i++)
 		{
 			camProxy->CaptureImage();
 			imshow("labda", *camProxy->lastImageTaken);
@@ -78,17 +78,6 @@ void TrackerCamera::startTracking(){
 			}
 		}
 
-		for (int i = 0; i<120; i++)
-		{
-			camProxy->CaptureImage();
-			imshow("labda", *camProxy->lastImageTaken);
-			tracker->processFrame(*camProxy->lastImageTaken);
-			char ch = cv::waitKey(25);
-			if (ch == 27)
-			{
-				break;
-			}
-		}
 
 		running = false;
 
