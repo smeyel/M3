@@ -16,6 +16,8 @@ using namespace std;
 class BallTracker : public ObjectTracker{
 
 	vector<vector<Point2i>> Contours;
+	vector<Point2i> Collisions;
+	Vector<Point2i> CollisionsPlace;
 	vector<Ball> Balls;
 
 public:
@@ -27,6 +29,8 @@ public:
 	void MatchContoursWithBalls(Mat &fortesting, bool UsePredict = false);
 	int SquareDistance(Point2i &First, Point2i &Second);
 	int FindClosestVisibleBall(Point2i &NewBall, bool UsePredict = false);
+	int FindSecondClosestVisileBall(Point2i &NewBall, bool UsePredict = false);
+	bool CollisionDetection(Point2f &center, float &radius, int &ClosestVisibleBall);
 	void DrawVisibleBallRoutes(Mat &img);
 	~BallTracker();
 };

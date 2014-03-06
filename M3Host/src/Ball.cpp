@@ -34,6 +34,11 @@ Point2i Ball::GetPosition()
 	return Point;
 }
 
+int Ball::GetRadius()
+{
+	return BallData.back().z;
+}
+
 void Ball::UpdateData(int x, int y, int r)
 {
 	Point3i Point(x, y, r);

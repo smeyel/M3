@@ -23,6 +23,7 @@ public:
 	void DrawLine(Mat &img);
 	int GetSize();
 	Point2i GetPosition();
+	int GetRadius();
 	void UpdateData(int x, int y, int r);
 	Point2i PredictPosition();
 	void SetVisible(bool isVisible);
