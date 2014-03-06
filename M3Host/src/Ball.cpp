@@ -6,37 +6,43 @@ Ball::Ball(){
 	
 }
 
-Ball::Ball(Point2i &StartPoint){
-	Position.push_back(StartPoint);
+Ball::Ball(int x, int y, int r){
+	Point3i Point(x, y, r);
+	BallData.push_back(Point);
 	visible = true;
 }
 
 int Ball::GetSize()
 {
-	return Position.size();
+	return BallData.size();
 }
 void Ball::DrawLine(Mat &img)
 {
-	for (int i = 0; i < Position.size()-1; i++)
+	for (int i = 0; i < BallData.size() - 1; i++)
 	{
-		line(img, Position[i], Position[i + 1], Scalar(255, 0, 0));
+		Point2i Pointi(BallData[i].x, BallData[i].y);
+		Point2i Pointj(BallData[i + 1].x, BallData[i + 1].y);
+		line(img, Pointi,Pointj, Scalar(255, 0, 0));
 	}
 }
 
 Point2i Ball::GetPosition()
 {
-	if (Position.empty()) return (Point2i)(-1, -1);
-	return Position.back();
+	if (BallData.empty()) return (Point2i)(-1, -1);
+	Point2i Point(BallData.back().x, BallData.back().y);
+	return Point;
 }
 
-void Ball::UpdatePosition(Point2i &pos)
+void Ball::UpdateData(int x, int y, int r)
 {
-	Position.push_back(pos);
+	Point3i Point(x, y, r);
+	BallData.push_back(Point);
 }
 
 Point2i Ball::PredictPosition()
 {
-	if (Position.size()>1) return 2 * Position[Position.size() - 1] - Position[Position.size() - 2];
+	if (BallData.size()>1) return 2 * (Point2i)(BallData[BallData.size() - 1].x, BallData[BallData.size() - 1].y)
+		- (Point2i)(BallData[BallData.size() - 2].x, BallData[BallData.size() - 2].y);
 }
 
 void Ball::SetVisible(bool isVisible)

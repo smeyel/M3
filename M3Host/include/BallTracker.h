@@ -15,17 +15,19 @@ using namespace std;
 
 class BallTracker : public ObjectTracker{
 
-	vector<vector<Point>> kontur;
+	vector<vector<Point2i>> Contours;
 	vector<Ball> Balls;
-	Mat imgHSV, imgThresh;
 
 public:
 	BallTracker();
 
 	void processFrame(Mat& img);
 	void init(const char *configfilename);
+	void FindBallContoursUsingHSV(Mat& img, Scalar Low, Scalar High);
+	void MatchContoursWithBalls(Mat &fortesting, bool UsePredict = false);
 	int SquareDistance(Point2i &First, Point2i &Second);
-	int FindClosestVisibleBall(Point2i &NewBall);
+	int FindClosestVisibleBall(Point2i &NewBall, bool UsePredict = false);
+	void DrawVisibleBallRoutes(Mat &img);
 	~BallTracker();
 };
 

@@ -78,7 +78,6 @@ void TrackerCamera::startTracking(){
 			}
 		}
 
-
 		running = false;
 
 	}
