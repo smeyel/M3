@@ -16,6 +16,7 @@ class Ball
 {
 	vector<Point3i> BallData;
 	bool visible;
+	int LastSeen;
 public:
 	Ball();
 	Ball(int x, int y, int z);
@@ -26,6 +27,9 @@ public:
 	Point2i PredictPosition();
 	void SetVisible(bool isVisible);
 	bool GetVisible();
+	void IncrementLastSeen();
+	void DecrementLastSeen();
+	int GetLastSeen();
 	~Ball();
 };
 #endif

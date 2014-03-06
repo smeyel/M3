@@ -3,13 +3,14 @@
 using namespace cv;
 
 Ball::Ball(){
-	
+	LastSeen = 0;
 }
 
 Ball::Ball(int x, int y, int r){
 	Point3i Point(x, y, r);
 	BallData.push_back(Point);
 	visible = true;
+	LastSeen = 0;
 }
 
 int Ball::GetSize()
@@ -37,6 +38,7 @@ void Ball::UpdateData(int x, int y, int r)
 {
 	Point3i Point(x, y, r);
 	BallData.push_back(Point);
+	DecrementLastSeen();
 }
 
 Point2i Ball::PredictPosition()
@@ -52,6 +54,21 @@ void Ball::SetVisible(bool isVisible)
 bool Ball::GetVisible()
 {
 	return visible;
+}
+
+void Ball::IncrementLastSeen()
+{
+	LastSeen++;
+}
+
+void Ball::DecrementLastSeen()
+{
+	LastSeen--;
+}
+
+int Ball::GetLastSeen()
+{
+	return LastSeen;
 }
 
 Ball::~Ball(){

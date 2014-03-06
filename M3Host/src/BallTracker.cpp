@@ -41,6 +41,11 @@ void BallTracker::FindBallContoursUsingHSV(Mat& img, Scalar Low, Scalar High)
 
 void BallTracker::MatchContoursWithBalls(Mat& fortesting, bool UsePredict)
 {
+	for (unsigned int i = 0; i < Balls.size(); i++)
+	{
+		Balls[i].IncrementLastSeen();
+	}
+
 	for (unsigned int i = 0; i < Contours.size(); i++)
 	{
 		if (Contours[i].size()>30)
@@ -66,9 +71,8 @@ void BallTracker::DrawVisibleBallRoutes(Mat &img)
 {
 	for (int i = 0; i < Balls.size(); i++)
 	{
-		Point2i Predicted = Balls[i].GetPosition();
-		if (Balls[i].GetSize()>10 && (Predicted.x < 10 || Predicted.x>(img.cols - 10) || Predicted.y < 10 || Predicted.y >(img.rows - 10))) Balls[i].SetVisible(false);
-		else if (Balls[i].GetSize()>1) Balls[i].DrawLine(img);
+		if (Balls[i].GetLastSeen()>5) Balls[i].SetVisible(false);
+		if (Balls[i].GetVisible()) Balls[i].DrawLine(img);
 	}
 }
 
