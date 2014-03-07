@@ -48,10 +48,14 @@ void Ball::UpdateData(int x, int y, int r)
 
 Point2i Ball::PredictPosition()
 {
-	if (BallData.size()>1) return 2 * (Point2i)(BallData[BallData.size() - 1].x, BallData[BallData.size() - 1].y)
-		- (Point2i)(BallData[BallData.size() - 2].x, BallData[BallData.size() - 2].y);
+	if (BallData.size() > 1)
+	{
+		Point2i Predicted(2 * BallData[BallData.size() - 1].x - BallData[BallData.size() - 2].x,
+			2 * BallData[BallData.size() - 1].y - BallData[BallData.size() - 2].y);
+		return Predicted;
+	}
+	else return this->GetPosition();
 }
-
 void Ball::SetVisible(bool isVisible)
 {
 	visible = isVisible;

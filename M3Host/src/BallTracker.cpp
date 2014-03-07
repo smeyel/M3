@@ -15,20 +15,40 @@ int BallTracker::SquareDistance(Point2i &First, Point2i &Second){
 
 int BallTracker::FindClosestVisibleBall(Point2i &NewBall,bool UsePredict)
 {
-	int ClosestBall=0;
-	if (Balls.empty()) return -1;
+	if (UsePredict)
+	{
+		int ClosestBall = 0;
+		if (Balls.empty()) return -1;
+		else
+		{
+			for (int i = 1; i < Balls.size(); i++)
+			{
+				if (Balls[i].GetVisible())
+				if (SquareDistance(NewBall, Balls[i].PredictPosition())<SquareDistance(NewBall, Balls[ClosestBall].PredictPosition()))
+					ClosestBall = i;
+			}
+			if (SquareDistance(NewBall, Balls[ClosestBall].PredictPosition()) > 2500)
+				return -1;
+		}
+		return ClosestBall;
+	}
 	else
 	{
-		for (int i = 1; i < Balls.size() ; i++)
+		int ClosestBall = 0;
+		if (Balls.empty()) return -1;
+		else
 		{
-			if( Balls[i].GetVisible())
+			for (int i = 1; i < Balls.size(); i++)
+			{
+				if (Balls[i].GetVisible())
 				if (SquareDistance(NewBall, Balls[i].GetPosition())<SquareDistance(NewBall, Balls[ClosestBall].GetPosition()))
 					ClosestBall = i;
+			}
+			if (SquareDistance(NewBall, Balls[ClosestBall].GetPosition()) > 2500)
+				return -1;
 		}
-		if (SquareDistance(NewBall, Balls[ClosestBall].GetPosition()) > 2500)
-			return -1;
+		return ClosestBall;
 	}
-	return ClosestBall;
 }
 
 int BallTracker::FindSecondClosestVisileBall(Point2i &NewBall, bool UsePredict)
@@ -113,7 +133,7 @@ void BallTracker::MatchContoursWithBalls(Mat& fortesting, bool UsePredict)
 			float radius;
 			Point2f center;
 			minEnclosingCircle(Contours[i], center, radius);
-			int ClosestVisibleBall = FindClosestVisibleBall((Point2i)center);
+			int ClosestVisibleBall = FindClosestVisibleBall((Point2i)center, UsePredict);
 			if (ClosestVisibleBall == -1) // új labda
 			{
 				Ball NewBall((int)center.x, (int)center.y, (int)radius);
@@ -141,14 +161,15 @@ void BallTracker::DrawVisibleBallRoutes(Mat &img)
 void BallTracker::processFrame(Mat& img){
 	/*HSV:0-180, 0-97, 201-256 */
 	FindBallContoursUsingHSV(img, Scalar(0, 0, 201), Scalar(180, 97, 256));
-	MatchContoursWithBalls(img);
+	MatchContoursWithBalls(img,true);
 	DrawVisibleBallRoutes(img);
 	for (unsigned int i = 0; i < Collisions.size(); i++)
 	{	
 		circle(img, CollisionsPlace[i],15, Scalar(0, 255, 0), -1);
 	}
 	imshow("pic", img);
-	if (Collisions.size()>0) waitKey(0);
+	//if (Collisions.size()>0) waitKey(0);
+	//waitKey(0);
 }
 
 
