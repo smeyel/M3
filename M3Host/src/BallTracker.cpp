@@ -87,8 +87,6 @@ void BallTracker::FindBallContoursUsingHSV(Mat& img, Scalar Low, Scalar High)
 	Mat imgThresh, imgHSV;
 	cvtColor(img, imgHSV, CV_BGR2HSV);
 	inRange(imgHSV, Low, High, imgThresh);
-	imshow("thresh", imgThresh);
-	waitKey(0);
 	findContours(imgThresh, Contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
 }
 
@@ -99,10 +97,6 @@ bool BallTracker::CollisionDetection(Point2f &center, float &radius, int &Closes
 	else
 	{
 		int SecondClosestVisibleBall = FindSecondClosestVisileBall((Point2i)center);
-		/*Point2i Predicted = Balls[ClosestVisibleBall].PredictPosition();
-		Balls[ClosestVisibleBall].UpdateData(Predicted.x, Predicted.y, Balls[ClosestVisibleBall].GetRadius());
-		Predicted = Balls[SecondClosestVisibleBall].PredictPosition();
-		Balls[SecondClosestVisibleBall].UpdateData(Predicted.x, Predicted.y, Balls[SecondClosestVisibleBall].GetRadius(), true);*/
 		if (ClosestVisibleBall>SecondClosestVisibleBall)
 		{
 		int exchange = ClosestVisibleBall;
@@ -113,10 +107,12 @@ bool BallTracker::CollisionDetection(Point2f &center, float &radius, int &Closes
 		{
 			if (Collisions[i].x == ClosestVisibleBall && Collisions[i].y == SecondClosestVisibleBall) return true;
 		}
+		Balls[ClosestVisibleBall].SetVisible(false);
+		Balls[SecondClosestVisibleBall].SetVisible(false);
 		Point2i NewCollision(ClosestVisibleBall, SecondClosestVisibleBall);
 		Collisions.push_back(NewCollision);
 		CollisionsPlace.push_back(Balls[ClosestVisibleBall].GetPosition());
-		waitKey(0);
+	//	waitKey(0);
 		return true;
 	}
 }
