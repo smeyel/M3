@@ -19,7 +19,7 @@ bool RemoteTrackerDevice::init(const char* initFile){
 
 
 void RemoteTrackerDevice::connectToAllCamera(){
-	for (int i = 0; i < trackCams.size(); i++){
+	for (unsigned int i = 0; i < trackCams.size(); i++){
 		trackCams[i]->connect();
 	}
 }
@@ -27,7 +27,7 @@ void RemoteTrackerDevice::connectToAllCamera(){
 void RemoteTrackerDevice::disconnectFromAllCamera(){
 	
 	cout << "Disconnecting..." << endl;
-	for (int i = 0; i < trackCams.size(); i++){
+	for (unsigned int i = 0; i < trackCams.size(); i++){
 		trackCams[i]->disconnect();
 	}
 	cout << "Done..." << endl;
@@ -35,13 +35,13 @@ void RemoteTrackerDevice::disconnectFromAllCamera(){
 
 void RemoteTrackerDevice::startTracking(){
 	//ezt majd ha több kamerával próbáljuk, akkor szálkezeléssel kell megoldani!
-	for (int i = 0; i < trackCams.size(); i++){
+	for (unsigned int i = 0; i < trackCams.size(); i++){
 		trackCams[i]->startTracking();
 	}
 }
 RemoteTrackerDevice::~RemoteTrackerDevice()
 {
-	for (int i = 0; i < trackCams.size(); i++){
+	for (unsigned int i = 0; i < trackCams.size(); i++){
 		if (trackCams[i] != NULL){
 			delete trackCams[i]; 
 			trackCams[i] = NULL;

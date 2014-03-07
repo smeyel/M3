@@ -19,7 +19,7 @@ int Ball::GetSize()
 }
 void Ball::DrawLine(Mat &img)
 {
-	for (int i = 0; i < BallData.size() - 1; i++)
+	for (unsigned int i = 0; i < BallData.size() - 1; i++)
 	{
 		Point2i Pointi(BallData[i].x, BallData[i].y);
 		Point2i Pointj(BallData[i + 1].x, BallData[i + 1].y);
