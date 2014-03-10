@@ -24,13 +24,14 @@ class LaserPointerTracker : public ObjectTracker{
 	DetectionParameters detectionParameters;
 	vector<Vec3f> lastFoundObjectCoords;
 
+	Mat averaging;
+
+	int blankFrameNum;
 public:
 	LaserPointerTracker();
 
 	//ezeket be kell rakni az initbe és nem használni a balltype-ot és a colort
-	LaserPointerTracker(BallType ballType, BallColor ballcolor);
-	LaserPointerTracker(BallType ballType, BallColor ballColor, const char* filename);
-
+	
 	 void init(const char *configfilename);
 	/**
 	 * For test purpose it shows the original video frame and the filtered pictures.
@@ -41,6 +42,10 @@ public:
 	* Detects circles on image .
 	*/
 	void processFrame(Mat& img);
+
+	void findClosestPoint(vector<Vec3f>& old, vector<Vec3f>& new_points);
+	
+	double dist(Point3f a, Point3f b);
 
 	virtual ~LaserPointerTracker();
 };

@@ -6,6 +6,7 @@
  */
 
 #include "DetectionParameters.h"
+#include "LaserConfigManager.h"
 
 DetectionParameters::DetectionParameters() {
 	minColorThreshold = CV_RGB(0,0,0);
@@ -14,8 +15,13 @@ DetectionParameters::DetectionParameters() {
 	houghParam2 = 50;
 	minRadius = 0;
 	maxRadius = 500;
-}
 
+	laserColor = 1;
+	lowerTreshold = 30;
+	minArea = 0;
+	maxArea = 500;
+}
+/*
 void DetectionParameters::loadParameters(BallType ballType, BallColor color) {
 	switch (ballType) {
 	case LASER:
@@ -43,15 +49,31 @@ void DetectionParameters::loadParameters(BallType ballType, BallColor color) {
 		break;
 	}
 }
+*/
+void DetectionParameters::loadParametersFrom(const char* file){
+	LaserConfigManager config((const char*)file);
 
-void DetectionParameters::loadParametersFrom(void* file){
-	//not implemented
+	houghParam1 = config.houghParam1;
+	houghParam2 = config.houghParam2;
+	
+	minRadius = config.minRadius;
+	maxRadius = config.maxRadius;
+
+	minColorThreshold = CV_RGB(config.minColorThreshold_R, config.minColorThreshold_G, config.minColorThreshold_B);
+	maxColorThreshold = CV_RGB(config.maxColorThreshold_R, config.maxColorThreshold_G, config.maxColorThreshold_B);
+
+	laserColor = config.laserColor;
+	lowerTreshold = config.lowerTreshold;
+	minArea = config.minArea;
+	maxArea = config.maxArea;
+
 }
 
+/*
 DetectionParameters::DetectionParameters(BallType ballType, BallColor color) {
 	loadParameters(ballType,color);
 }
-
+*/
 
 DetectionParameters::~DetectionParameters() {
 	// TODO Auto-generated destructor stub

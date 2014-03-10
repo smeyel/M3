@@ -43,6 +43,12 @@ class TrackerConfigManager
 			exit(-1);
 		}
 
+
+		delete SIreader;
+		return true;
+
+
+
 	}
 	 
 public:

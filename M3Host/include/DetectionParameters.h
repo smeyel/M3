@@ -29,11 +29,17 @@ public:
 	double houghParam2;
 	double minRadius;
 	double maxRadius;
+
+	int laserColor;
+	int lowerTreshold;
+
+	int minArea;
+	int maxArea;
 public:
 	DetectionParameters();
-	DetectionParameters(BallType ballType, BallColor color);
-	void loadParameters(BallType ballType, BallColor color);
-	void loadParametersFrom(void* file);
+//	DetectionParameters(BallType ballType, BallColor color);
+//	void loadParameters(BallType ballType, BallColor color);
+	void loadParametersFrom(const char* file);
 	virtual ~DetectionParameters();
 };
 
