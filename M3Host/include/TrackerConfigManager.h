@@ -1,6 +1,7 @@
 #ifndef __TRACKERCONFIGMANAGER_H_
 #define __TRACKERCONFIGMANAGER_H_
 #include <iostream>
+#include <string>
 #include <stdlib.h>
 #include "SimpleIniConfigReader.h"
 #include "DetectionParameters.h"
@@ -42,6 +43,9 @@ class TrackerConfigManager
 			cout << "Invalid tracker type in " << filename << endl;
 			exit(-1);
 		}
+		saveToFile = reader->getBoolValue("main", "saveToFile");
+		destination = reader->getStringValue("main", "destination");
+
 
 	}
 	 
@@ -54,7 +58,8 @@ public:
 	// Tracker settings:
 	BallType trackerType;
 	BallColor trackerColor;
-	
+	bool saveToFile;
+	string destination;
 };
 
 

@@ -10,6 +10,8 @@ public:
 	CameraRemoteProxy* camProxy;
 	ObjectTracker* tracker;
 	bool running;
+	bool saveToFile;
+	string destination;
 
 	//jó lenne ide egy config manager szerûség, mint ami a másik oldalon a MyPhoneProxynál van!
 	TrackerCamera();
@@ -21,6 +23,7 @@ public:
 	void loadTracker(ObjectTracker* tracker);
 	////
 	void startTracking();
+	bool SaveVideoToFile(vector<Mat> &VideoPuffer);
 	~TrackerCamera();
 private:
 	int port;
