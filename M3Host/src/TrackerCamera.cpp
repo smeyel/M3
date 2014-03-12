@@ -89,6 +89,7 @@ void TrackerCamera::startTracking(){
 		bool calibrated = 0;
 
 		vector<Mat> VideoPuffer;
+		//if (camProxy->CaptureUntilCalibrated(30)) calibrated = true;
 
 		if (!calibrated)
 			cout << "Camera is not calibrated!" << endl;
@@ -96,7 +97,6 @@ void TrackerCamera::startTracking(){
 		for (int i = 0;; i++)
 		{
 			camProxy->CaptureImage();
-			imshow("labda", *camProxy->lastImageTaken);
 			tracker->processFrame(*camProxy->lastImageTaken);
 			if (saveToFile) VideoPuffer.push_back(camProxy->lastImageTaken->clone()); 
 			char ch = cv::waitKey(25);

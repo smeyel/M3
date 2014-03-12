@@ -47,6 +47,12 @@ class TrackerConfigManager
 		destination = reader->getStringValue("main", "destination");
 
 
+
+		delete SIreader;
+		return true;
+
+
+
 	}
 	 
 public:
