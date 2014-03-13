@@ -23,10 +23,12 @@ class LaserPointerTracker : public ObjectTracker{
 	//Mat img;
 	DetectionParameters detectionParameters;
 	vector<Vec3f> lastFoundObjectCoords;
-
+	
+	Point2i lastPoint;
 	Mat averaging;
+	int noPoints;
+	int moreThanOnePoints;
 
-	int blankFrameNum;
 public:
 	LaserPointerTracker();
 
@@ -37,15 +39,21 @@ public:
 	 * For test purpose it shows the original video frame and the filtered pictures.
 	 */
 	void addTestWindows(Mat& filteredImage, vector<Vec3f>& circles,Mat& img );
-	
+
+	void addWindowsAndCounters(Mat& filtered, Mat& img);
 	/**
 	* Detects circles on image .
 	*/
 	void processFrame(Mat& img);
 
-	void findClosestPoint(vector<Vec3f>& old, vector<Vec3f>& new_points);
+	Point2i closestPoint(Point2i old, vector<Point2i> new_points);
+
+	Point2i largestIntensityPoint(vector<Point2i> points, Mat img);
+
+	Point2i newPoint(Point2i closest, Point2i mostIntense);
+
 	
-	double dist(Point3f a, Point3f b);
+	int sqDist(Point2i a, Point2i b);
 
 	virtual ~LaserPointerTracker();
 };

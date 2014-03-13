@@ -5,7 +5,8 @@ using namespace cv;
 
 	LaserPointerTracker::LaserPointerTracker() {
 	detectionParameters = DetectionParameters();
-	blankFrameNum = 0;
+	moreThanOnePoints = 0;
+	noPoints = 0;
 }
 	
 	void LaserPointerTracker::init(const char *configfilename){
@@ -29,6 +30,22 @@ using namespace cv;
 	imshow("teszt", filteredImage);
 	imshow("circles", img);
 }
+
+
+	void LaserPointerTracker::addWindowsAndCounters(Mat& filtered, Mat& img)
+	{
+		circle(img, lastPoint, 200 / 32, Scalar(0, 255, 0), 2, 8);
+		stringstream sout1, sout2;
+
+		sout1 << "Frames with no laser point found: " << noPoints;
+		sout2 << "Frames with more than one points found: " << moreThanOnePoints;
+
+		putText(img, sout1.str(), Point(5, 25), FONT_HERSHEY_SIMPLEX, 0.4, Scalar(0, 255, 0));
+		putText(img, sout2.str(), Point(5, 50), FONT_HERSHEY_SIMPLEX, 0.4, Scalar(0, 255, 0));
+
+		imshow("img", img);
+		imshow("bw", filtered);
+	}
 
 
 	void LaserPointerTracker::processFrame(Mat& img){
@@ -83,14 +100,12 @@ using namespace cv;
 		//increase contrast
 		frameout.convertTo(frameout, -1, 100, 0);
 
-		Mat cont = Mat::zeros(img.rows, img.cols, CV_8UC1);
+		
 		vector<vector<Point>> contours;
-		
-		
 
 		findContours(frameout.clone(), contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
 
-		vector<Vec3f> newFoundObjectCoords;
+		vector<Point2i> newFoundPoints;
 
 		//for each contour with suitable size, save the coordinates of the centre 
 		for (int i = 0; i< contours.size(); i++)
@@ -103,50 +118,90 @@ using namespace cv;
 				double posX = mom.m10 / area;
 				double posY = mom.m01 / area;
 
-				Vec3f pos(posX, posY, 0);
-
-				newFoundObjectCoords.push_back(pos);
-
+				newFoundPoints.push_back(Point(posX, posY));
 			}
 		}
 
-		findClosestPoint(lastFoundObjectCoords, newFoundObjectCoords);
+		Point2i closest = closestPoint(lastPoint, newFoundPoints);
+		Point2i mostIntense = largestIntensityPoint(newFoundPoints, channels[color]);
 
-		addTestWindows(frameout, lastFoundObjectCoords, img);
+		
+		lastPoint = newPoint(closest, mostIntense);
+		
+		addWindowsAndCounters(frameout, img);
 	}
 
 
+
+
+
 	//distance between two points:
-	double LaserPointerTracker::dist(Point3f a, Point3f b)
+	int LaserPointerTracker::sqDist(Point2i a, Point2i b)
 	{
-		return sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y) + (a.z - b.z)*(a.z - b.z));
+		return ((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));
 	}
 
 
 	//Find the closest new point to the old one:
-	void LaserPointerTracker::findClosestPoint(vector<Vec3f>& old, vector<Vec3f>& new_points)
+	Point2i LaserPointerTracker::closestPoint(Point2i last, vector<Point2i> new_points)
 	{
 		
-		if (old.empty())
-		{
-			if (!new_points.empty())
-				old.push_back(new_points[0]);
-		}
+		if (last == Point2i(0,0))
+			return Point2i(0, 0);
 		else
 		{
 			if (new_points.empty())
-					old.clear();
+				return Point2i(0, 0);
 			else
 			{
 				int idx = 0;
 				for (int i = 0; i < new_points.size(); i++)
 				{
-					if (dist(old[0], new_points[idx]) > dist(old[0], new_points[i]))
+					if (sqDist(last, new_points[idx]) > sqDist(last, new_points[i]))
 						idx = i;
 				}
-				old.front() = new_points[idx];
+				return new_points[idx];
 			}		 
 		}
+	}
+
+	Point2i LaserPointerTracker::largestIntensityPoint(vector<Point2i> points, Mat img)
+	{
+		int max = 0;
+		int idx=0;
+		if (!points.size())
+			return Point2i();
+		for (int i = 0; i < points.size(); i++)
+		{
+			int intensity = img.at<uchar>(points[i].y, points[i].x);
+			idx = (intensity < max) ? idx : i;
+			max = (intensity < max) ? max : intensity;
+		}
+		return points[idx];
+	}
+
+
+
+	Point2i LaserPointerTracker::newPoint(Point2i closest, Point2i mostIntense)
+	{
+		if (closest == Point2i(0, 0))
+		{
+			if (mostIntense == Point2i(0, 0))
+			{
+				noPoints++;
+				return  Point2i(0, 0);
+			}
+			else
+				return mostIntense;
+		}
+		else
+		if (closest != mostIntense)
+		{
+			moreThanOnePoints++;
+			return Point2i(0, 0);
+		}
+		else
+			return mostIntense;
 	}
 
 	LaserPointerTracker::~LaserPointerTracker() {
