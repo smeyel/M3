@@ -25,7 +25,9 @@ class BallTrackerConfigManager
 		CollidedBallsAreaRateNum = reader->getIntValue("ball", "CollidedBallsAreaRateNum");
 		CollidedBallsAreaRateDen = reader->getIntValue("ball", "CollidedBallsAreaRateDen");
 		MinSquareDistanceToCreateNewBall = reader->getIntValue("ball", "MinSquareDistanceToCreateNewBall");
+		FramesNeededToDetectCollision = reader->getIntValue("ball", "FramesNeededToDetectCollision");
 		FramesNeededToDropBall = reader->getIntValue("ball", "FramesNeededToDropBall");
+		ContourMinSize = reader->getIntValue("ball", "ContourMinSize");
 
 		delete SIreader;
 		return true;
@@ -48,7 +50,9 @@ public:
 	int CollidedBallsAreaRateNum;
 	int CollidedBallsAreaRateDen;
 	int MinSquareDistanceToCreateNewBall;
+	int FramesNeededToDetectCollision;
 	int FramesNeededToDropBall;
+	int ContourMinSize;
 
 };
 

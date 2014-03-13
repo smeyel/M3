@@ -11,7 +11,10 @@ void BallTracker::init(const char *configfilename){
 	HSVhigh = Scalar(config.Hhigh,config.Shigh,config.Vhigh);
 	CollidedBallsAreaRate = (double)config.CollidedBallsAreaRateNum/(double)config.CollidedBallsAreaRateDen;
 	MinSquareDistanceToCreateNewBall = config.MinSquareDistanceToCreateNewBall;
+	FramesNeededToDetectCollision = config.FramesNeededToDetectCollision;
 	FramesNeededToDropBall = config.FramesNeededToDropBall;
+	ContourMinSize = config.ContourMinSize;
+
 	return;
 }
 
@@ -50,7 +53,7 @@ int BallTracker::FindClosestVisibleBall(Point2i &NewBall,bool UsePredict)
 				if (SquareDistance(NewBall, Balls[i].GetPosition())<SquareDistance(NewBall, Balls[ClosestBall].GetPosition()))
 					ClosestBall = i;
 			}
-			if (SquareDistance(NewBall, Balls[ClosestBall].GetPosition()) > 2500)
+			if (SquareDistance(NewBall, Balls[ClosestBall].GetPosition()) > MinSquareDistanceToCreateNewBall)
 				return -1;
 		}
 		return ClosestBall;
@@ -98,7 +101,7 @@ void BallTracker::FindBallContoursUsingHSV(Mat& img)
 
 bool BallTracker::CollisionDetection(Point2f &center, float &radius, int &ClosestVisibleBall)
 {
-	if (radius < CollidedBallsAreaRate*Balls[ClosestVisibleBall].GetRadius() || Balls[ClosestVisibleBall].GetSize() < 5)
+	if (radius < CollidedBallsAreaRate*Balls[ClosestVisibleBall].GetRadius() || Balls[ClosestVisibleBall].GetSize() < FramesNeededToDropBall)
 		return false;
 	else
 	{
@@ -163,7 +166,6 @@ void BallTracker::DrawVisibleBallRoutes(Mat &img)
 }
 
 void BallTracker::processFrame(Mat& img){
-	/*HSV:0-180, 0-97, 201-256 */
 	FindBallContoursUsingHSV(img);
 	MatchContoursWithBalls(img);
 	DrawVisibleBallRoutes(img);

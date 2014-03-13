@@ -40,7 +40,9 @@ class BallTracker : public ObjectTracker{
 	Scalar HSVhigh;
 	double CollidedBallsAreaRate;
 	int MinSquareDistanceToCreateNewBall;
+	int FramesNeededToDetectCollision;
 	int FramesNeededToDropBall;
+	int ContourMinSize;
 
 public:
 	// Constructor
