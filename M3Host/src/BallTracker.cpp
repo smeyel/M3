@@ -30,6 +30,12 @@ int BallTracker::FindClosestVisibleBall(Point2i &NewBall,bool UsePredict)
 		if (Balls.empty()) return -1;
 		else
 		{
+			while (!Balls[ClosestBall].GetVisible())
+			{
+				if (ClosestBall == (Balls.size() - 1)) return -1;
+				ClosestBall++;
+			}
+		
 			for (unsigned int i = 1; i < Balls.size(); i++)
 			{
 				if (Balls[i].GetVisible())
@@ -47,6 +53,11 @@ int BallTracker::FindClosestVisibleBall(Point2i &NewBall,bool UsePredict)
 		if (Balls.empty()) return -1;
 		else
 		{
+			while (!Balls[ClosestBall].GetVisible())
+			{
+				if (ClosestBall == (Balls.size() - 1)) return -1;
+				ClosestBall++;
+			}
 			for (unsigned int i = 1; i < Balls.size(); i++)
 			{
 				if (Balls[i].GetVisible())
@@ -190,7 +201,7 @@ void BallTracker::processFrame(Mat& img){
 	}
 	imshow("pic", img);
 	//if (Collisions.size()>0) waitKey(0);
-	waitKey(0);
+	//waitKey(0);
 }
 
 
