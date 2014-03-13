@@ -112,7 +112,7 @@ void BallTracker::FindBallContoursUsingHSV(Mat& img)
 
 bool BallTracker::CollisionDetection(Point2f &center, float &radius, int &ClosestVisibleBall, int ContourIndex, Mat& fortesting)
 {
-	if (radius < CollidedBallsAreaRate*Balls[ClosestVisibleBall].GetRadius() || Balls[ClosestVisibleBall].GetSize() < FramesNeededToDropBall)
+	if (radius < CollidedBallsAreaRate*Balls[ClosestVisibleBall].GetRadius() || Balls[ClosestVisibleBall].GetSize() < FramesNeededToDetectCollision)
 		return false;
 	else
 	{
@@ -140,10 +140,10 @@ bool BallTracker::CollisionDetection(Point2f &center, float &radius, int &Closes
 		Point2f center;
 		minEnclosingCircle(ClosestBallContour, center, radius);
 		Balls[ClosestVisibleBall].UpdateData((int)center.x, (int)center.y, Balls[ClosestVisibleBall].GetRadius());
-		circle(fortesting, center, radius, Scalar(0, 0, 255),3);
+		circle(fortesting, center, radius, Scalar(0, 0, 255),2);
 		minEnclosingCircle(SecondClosestBallContour, center, radius);
 		Balls[SecondClosestVisibleBall].UpdateData((int)center.x, (int)center.y, Balls[SecondClosestVisibleBall].GetRadius());
-		circle(fortesting, center, radius, Scalar(0, 255, 0),3);
+		circle(fortesting, center, radius, Scalar(0, 255, 0),2);
 		/*Point2i NewCollision(ClosestVisibleBall, SecondClosestVisibleBall);
 		Collisions.push_back(NewCollision);
 		CollisionsPlace.push_back(Balls[ClosestVisibleBall].GetPosition());*/
@@ -177,7 +177,7 @@ void BallTracker::MatchContoursWithBalls(Mat& fortesting, bool UsePredict)
 				if (!CollisionDetection(center, radius, ClosestVisibleBall,i,fortesting))
 					Balls[ClosestVisibleBall].UpdateData((int)center.x, (int)center.y, (int)radius);
 			}
-			circle(fortesting, (Point2i)center, (int)radius, Scalar(255, 0, 0)); // for testing
+			circle(fortesting, (Point2i)center, (int)radius, Scalar(255, 0, 0),2); // for testing
 		}
 	}
 }
@@ -195,12 +195,7 @@ void BallTracker::processFrame(Mat& img){
 	FindBallContoursUsingHSV(img);
 	MatchContoursWithBalls(img);
 	DrawVisibleBallRoutes(img);
-	for (unsigned int i = 0; i < Collisions.size(); i++)
-	{	
-		circle(img, CollisionsPlace[i],15, Scalar(0, 255, 0), -1);
-	}
 	imshow("pic", img);
-	//if (Collisions.size()>0) waitKey(0);
 	//waitKey(0);
 }
 
