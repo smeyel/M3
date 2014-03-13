@@ -135,7 +135,7 @@ void BallTracker::MatchContoursWithBalls(Mat& fortesting, bool UsePredict)
 
 	for (unsigned int i = 0; i < Contours.size(); i++)
 	{
-		if (Contours[i].size()>30)
+		if (Contours[i].size()>ContourMinSize)
 		{
 			float radius;
 			Point2f center;
