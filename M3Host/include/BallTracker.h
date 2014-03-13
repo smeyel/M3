@@ -91,7 +91,7 @@ public:
 		@param radius: uses for decide whether it's a collision
 		@param ClosestVisibleBall: marks Collision
 	*/
-	bool CollisionDetection(Point2f &center, float &radius, int &ClosestVisibleBall);
+	bool CollisionDetection(Point2f &center, float &radius, int &ClosestVisibleBall, int ContourIndex, Mat& fortesting);
 	/*  Draws the travelled road for each visible Ball
 		@param img: draws here
 	*/
