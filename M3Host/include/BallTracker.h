@@ -9,6 +9,7 @@
 #include "ObjectTracker.h"
 #include "DetectionParameters.h"
 #include "Ball.h"
+#include "BallTrackerConfigManager.h"
 
 using namespace cv;
 using namespace std;
@@ -34,6 +35,12 @@ class BallTracker : public ObjectTracker{
 	-For how many frames it cannot be detected
 	*/
 	vector<Ball> Balls;
+	//Detection Parameterts
+	Scalar HSVlow;
+	Scalar HSVhigh;
+	double CollidedBallsAreaRate;
+	int MinSquareDistanceToCreateNewBall;
+	int FramesNeededToDropBall;
 
 public:
 	// Constructor
@@ -51,7 +58,7 @@ public:
 		@param Low: minimum values for HSV filter
 		@param High: maximum values for HSV filter
 	*/
-	void FindBallContoursUsingHSV(Mat& img, Scalar Low, Scalar High);
+	void FindBallContoursUsingHSV(Mat& img);
 	/*  Matches contours with previously tracked balls. If it can't find, creates new Ball
 		For match, it uses the last coords of each tracked ball,
 		or uses first order predict.

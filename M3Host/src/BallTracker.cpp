@@ -6,6 +6,12 @@ BallTracker::BallTracker() {
 }
 
 void BallTracker::init(const char *configfilename){
+	BallTrackerConfigManager config(configfilename);
+	HSVlow = Scalar(config.Hlow, config.Slow, config.Vlow);
+	HSVhigh = Scalar(config.Hhigh,config.Shigh,config.Vhigh);
+	CollidedBallsAreaRate = (double)config.CollidedBallsAreaRateNum/(double)config.CollidedBallsAreaRateDen;
+	MinSquareDistanceToCreateNewBall = config.MinSquareDistanceToCreateNewBall;
+	FramesNeededToDropBall = config.FramesNeededToDropBall;
 	return;
 }
 
@@ -27,7 +33,7 @@ int BallTracker::FindClosestVisibleBall(Point2i &NewBall,bool UsePredict)
 				if (SquareDistance(NewBall, Balls[i].PredictPosition())<SquareDistance(NewBall, Balls[ClosestBall].PredictPosition()))
 					ClosestBall = i;
 			}
-			if (SquareDistance(NewBall, Balls[ClosestBall].PredictPosition()) > 2500)
+			if (SquareDistance(NewBall, Balls[ClosestBall].PredictPosition()) > MinSquareDistanceToCreateNewBall)
 				return -1;
 		}
 		return ClosestBall;
@@ -82,17 +88,17 @@ int BallTracker::FindSecondClosestVisileBall(Point2i &NewBall, bool UsePredict)
 	return SecondClosestBall;
 }
 
-void BallTracker::FindBallContoursUsingHSV(Mat& img, Scalar Low, Scalar High)
+void BallTracker::FindBallContoursUsingHSV(Mat& img)
 {
 	Mat imgThresh, imgHSV;
 	cvtColor(img, imgHSV, CV_BGR2HSV);
-	inRange(imgHSV, Low, High, imgThresh);
+	inRange(imgHSV, HSVlow, HSVhigh, imgThresh);
 	findContours(imgThresh, Contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
 }
 
 bool BallTracker::CollisionDetection(Point2f &center, float &radius, int &ClosestVisibleBall)
 {
-	if (radius < 1.5*Balls[ClosestVisibleBall].GetRadius() || Balls[ClosestVisibleBall].GetSize() < 5)
+	if (radius < CollidedBallsAreaRate*Balls[ClosestVisibleBall].GetRadius() || Balls[ClosestVisibleBall].GetSize() < 5)
 		return false;
 	else
 	{
@@ -151,14 +157,14 @@ void BallTracker::DrawVisibleBallRoutes(Mat &img)
 {
 	for (unsigned int i = 0; i < Balls.size(); i++)
 	{
-		if (Balls[i].GetLastSeen()>3) Balls[i].SetVisible(false);
+		if (Balls[i].GetLastSeen()>FramesNeededToDropBall) Balls[i].SetVisible(false);
 		if (Balls[i].GetVisible()) Balls[i].DrawLine(img);
 	}
 }
 
 void BallTracker::processFrame(Mat& img){
 	/*HSV:0-180, 0-97, 201-256 */
-	FindBallContoursUsingHSV(img, Scalar(0, 0, 201), Scalar(180, 97, 256));
+	FindBallContoursUsingHSV(img);
 	MatchContoursWithBalls(img);
 	DrawVisibleBallRoutes(img);
 	for (unsigned int i = 0; i < Collisions.size(); i++)
