@@ -235,7 +235,7 @@ void BallTracker::processFrame(Mat& img){
 	MatchContoursWithBalls(img);
 	DrawVisibleBallRoutes(img);
 	imshow("pic", img);
-	waitKey(0);
+	//waitKey(0);
 }
 
 
