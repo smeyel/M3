@@ -24,6 +24,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libCameraAbstraction", "Fra
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Recorder", "Framework\Recorder\Recorder.vcxproj", "{B915A461-13D1-481C-A5B9-E4B6B7E82B6C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CameraCalibrator", "Framework\CameraCalibrator\CameraCalibrator.vcxproj", "{38D762D5-CF36-49C2-B285-4D1AC47FBC7E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libCameraCalibrator", "Framework\libCameraCalibrator\libCameraCalibrator.vcxproj", "{CC23163F-8C8F-41E5-8B72-DD7914F69DE6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -62,6 +66,14 @@ Global
 		{B915A461-13D1-481C-A5B9-E4B6B7E82B6C}.Debug|Win32.Build.0 = Debug|Win32
 		{B915A461-13D1-481C-A5B9-E4B6B7E82B6C}.Release|Win32.ActiveCfg = Release|Win32
 		{B915A461-13D1-481C-A5B9-E4B6B7E82B6C}.Release|Win32.Build.0 = Release|Win32
+		{38D762D5-CF36-49C2-B285-4D1AC47FBC7E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{38D762D5-CF36-49C2-B285-4D1AC47FBC7E}.Debug|Win32.Build.0 = Debug|Win32
+		{38D762D5-CF36-49C2-B285-4D1AC47FBC7E}.Release|Win32.ActiveCfg = Release|Win32
+		{38D762D5-CF36-49C2-B285-4D1AC47FBC7E}.Release|Win32.Build.0 = Release|Win32
+		{CC23163F-8C8F-41E5-8B72-DD7914F69DE6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CC23163F-8C8F-41E5-8B72-DD7914F69DE6}.Debug|Win32.Build.0 = Debug|Win32
+		{CC23163F-8C8F-41E5-8B72-DD7914F69DE6}.Release|Win32.ActiveCfg = Release|Win32
+		{CC23163F-8C8F-41E5-8B72-DD7914F69DE6}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
