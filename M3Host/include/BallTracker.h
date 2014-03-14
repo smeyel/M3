@@ -43,6 +43,7 @@ class BallTracker : public ObjectTracker{
 	int FramesNeededToDetectCollision;
 	int FramesNeededToDropBall;
 	int ContourMinSize;
+	int SquareDistanceToInvolveCollision;
 
 public:
 	// Constructor
