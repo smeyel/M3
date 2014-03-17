@@ -29,6 +29,7 @@ class BallTrackerConfigManager
 		FramesNeededToDropBall = reader->getIntValue("ball", "FramesNeededToDropBall");
 		ContourMinSize = reader->getIntValue("ball", "ContourMinSize");
 		SquareDistanceToInvolveCollision = reader->getIntValue("ball", "SquareDistanceToInvolveCollision");
+		ErosionSize = reader->getIntValue("ball", "ErosionSize");
 
 		delete SIreader;
 		return true;
@@ -55,6 +56,7 @@ public:
 	int FramesNeededToDropBall;
 	int ContourMinSize;
 	int SquareDistanceToInvolveCollision;
+	int ErosionSize;
 
 };
 

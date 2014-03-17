@@ -15,6 +15,7 @@ void BallTracker::init(const char *configfilename){
 	FramesNeededToDropBall = config.FramesNeededToDropBall;
 	ContourMinSize = config.ContourMinSize;
 	SquareDistanceToInvolveCollision = config.SquareDistanceToInvolveCollision;
+	ErosionSize = config.ErosionSize;
 
 	return;
 }
@@ -103,11 +104,12 @@ int BallTracker::FindSecondClosestVisileBall(Point2i &NewBall, bool UsePredict)
 	return SecondClosestBall;
 }
 
-void BallTracker::FindBallContoursUsingHSV(Mat& img)
+void BallTracker::FindBallContoursUsingHSV(Mat& img, bool UseErosion)
 {
 	Mat imgThresh, imgHSV;
 	cvtColor(img, imgHSV, CV_BGR2HSV);
 	inRange(imgHSV, HSVlow, HSVhigh, imgThresh);
+	if (UseErosion) ErodeFrame(imgThresh);
 	findContours(imgThresh, Contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
 }
 
@@ -117,43 +119,11 @@ bool BallTracker::CollisionDetection(Point2f &center, float &radius, int &Closes
 		return false;
 	else
 	{
-		/*int SecondClosestVisibleBall = FindSecondClosestVisileBall((Point2i)center);
-		if (ClosestVisibleBall>SecondClosestVisibleBall)
-		{
-		int exchange = ClosestVisibleBall;
-		ClosestVisibleBall = SecondClosestVisibleBall;
-		SecondClosestVisibleBall = exchange;
-		}
-		for (unsigned int i = 0; i < Collisions.size(); i++)
-		{
-			if (Collisions[i].x == ClosestVisibleBall && Collisions[i].y == SecondClosestVisibleBall) return true;
-		}
-		vector<Point2i> ClosestBallContour;
-		vector<Point2i> SecondClosestBallContour;
-		for (unsigned int i = 0; i < Contours[ContourIndex].size(); i++)
-		{
-			if (SquareDistance(Contours[ContourIndex][i], Balls[ClosestVisibleBall].PredictPosition())<
-				SquareDistance(Contours[ContourIndex][i], Balls[SecondClosestVisibleBall].PredictPosition()))
-				ClosestBallContour.push_back(Contours[ContourIndex][i]);
-			else SecondClosestBallContour.push_back(Contours[ContourIndex][i]);
-		}
-		float radius;
-		Point2f center;
-		minEnclosingCircle(ClosestBallContour, center, radius);
-		Balls[ClosestVisibleBall].UpdateData((int)center.x, (int)center.y, Balls[ClosestVisibleBall].GetRadius());
-		circle(fortesting, center, radius, Scalar(0, 0, 255),2);
-		minEnclosingCircle(SecondClosestBallContour, center, radius);
-		Balls[SecondClosestVisibleBall].UpdateData((int)center.x, (int)center.y, Balls[SecondClosestVisibleBall].GetRadius());
-		circle(fortesting, center, radius, Scalar(0, 255, 0),2);*/
-		/*Point2i NewCollision(ClosestVisibleBall, SecondClosestVisibleBall);
-		Collisions.push_back(NewCollision);
-		CollisionsPlace.push_back(Balls[ClosestVisibleBall].GetPosition());*/
-	//	waitKey(0);
 		vector<int> BallsInCollision;
 		vector<vector<Point2i>> SeparatedContours;
 		for (int i = 0; i < Balls.size(); i++)
 		{
-			if (Balls[i].GetVisible() && SquareDistance((Point2i)center, Balls[i].PredictPosition()) < SquareDistanceToInvolveCollision)
+			if (Balls[i].GetVisible() && SquareDistance((Point2i)center, Balls[i].GetPosition()) < SquareDistanceToInvolveCollision)
 			{
 				BallsInCollision.push_back(i);
 				vector<Point2i> SingleContour;
@@ -174,6 +144,7 @@ bool BallTracker::CollisionDetection(Point2f &center, float &radius, int &Closes
 			}
 			SeparatedContours[ClosestBallInCollision].push_back(Contours[ContourIndex][i]);
 		}
+		//TODO: Mi van ha nincs legközelebbi labada!
 
 		for (unsigned int i = 0; i < BallsInCollision.size(); i++)
 		{
@@ -213,7 +184,7 @@ void BallTracker::MatchContoursWithBalls(Mat& fortesting, bool UsePredict)
 			}
 			else
 			{
-				if (!CollisionDetection(center, radius, ClosestVisibleBall,i,fortesting))
+				//if (!CollisionDetection(center, radius, ClosestVisibleBall,i,fortesting))
 					Balls[ClosestVisibleBall].UpdateData((int)center.x, (int)center.y, (int)radius);
 			}
 			circle(fortesting, (Point2i)center, (int)radius, Scalar(255, 0, 0),2); // for testing
@@ -230,12 +201,22 @@ void BallTracker::DrawVisibleBallRoutes(Mat &img)
 	}
 }
 
+void BallTracker::ErodeFrame(Mat& img)
+{
+	Mat element = cv::getStructuringElement(cv::MORPH_RECT,
+		cv::Size(2 * ErosionSize + 1, 2 * ErosionSize + 1),
+		cv::Point(ErosionSize, ErosionSize));
+	imshow("before", img);
+	erode(img, img, element);
+	imshow("after", img);
+}
+
 void BallTracker::processFrame(Mat& img){
-	FindBallContoursUsingHSV(img);
-	MatchContoursWithBalls(img);
+	FindBallContoursUsingHSV(img,true);
+	MatchContoursWithBalls(img,true);
 	DrawVisibleBallRoutes(img);
 	imshow("pic", img);
-	//waitKey(0);
+	waitKey(0);
 }
 
 

@@ -44,6 +44,7 @@ class BallTracker : public ObjectTracker{
 	int FramesNeededToDropBall;
 	int ContourMinSize;
 	int SquareDistanceToInvolveCollision;
+	int ErosionSize;
 
 public:
 	// Constructor
@@ -61,7 +62,7 @@ public:
 		@param Low: minimum values for HSV filter
 		@param High: maximum values for HSV filter
 	*/
-	void FindBallContoursUsingHSV(Mat& img);
+	void FindBallContoursUsingHSV(Mat& img, bool UseErosion=false);
 	/*  Matches contours with previously tracked balls. If it can't find, creates new Ball
 		For match, it uses the last coords of each tracked ball,
 		or uses first order predict.
@@ -97,6 +98,7 @@ public:
 		@param img: draws here
 	*/
 	void DrawVisibleBallRoutes(Mat &img);
+	void ErodeFrame(Mat &img);
 	~BallTracker();
 };
 
