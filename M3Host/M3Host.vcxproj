@@ -119,8 +119,10 @@
   <ItemGroup>
     <ClInclude Include="include\Ball.h" />
     <ClInclude Include="include\BallTracker.h" />
+    <ClInclude Include="include\BallTrackerConfigManager.h" />
     <ClInclude Include="include\CameraRemoteConfigManager.h" />
     <ClInclude Include="include\DetectionParameters.h" />
+    <ClInclude Include="include\LaserConfigManager.h" />
     <ClInclude Include="include\LaserPointerTracker.h" />
     <ClInclude Include="include\ObjectTracker.h" />
     <ClInclude Include="include\RemoteTrackerDevice.h" />
