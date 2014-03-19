@@ -5,8 +5,11 @@ using namespace cv;
 
 	LaserPointerTracker::LaserPointerTracker() {
 	detectionParameters = DetectionParameters();
-	moreThanOnePoints = 0;
-	noPoints = 0;
+	failCntUndecideable = 0;
+	failCntNoPoints = 0;
+	failCntTooManyPoints = 0;
+
+	tooManyPoints = false;
 }
 	
 	void LaserPointerTracker::init(const char *configfilename){
@@ -34,14 +37,16 @@ using namespace cv;
 
 	void LaserPointerTracker::addWindowsAndCounters(Mat& filtered, Mat& img)
 	{
-		circle(img, lastPoint, 200 / 32, Scalar(0, 255, 0), 2, 8);
-		stringstream sout1, sout2;
+		circle(img, lastPoint, 200 / 32, Scalar(0, 0, 255), 2, 8);
+		stringstream sout1, sout2, sout3;
 
-		sout1 << "Frames with no laser point found: " << noPoints;
-		sout2 << "Frames with more than one points found: " << moreThanOnePoints;
+		sout1 << "Frames with no laser point found: " << failCntNoPoints;
+		sout2 << "Frames with undecideable laser point: " << failCntUndecideable;
+		sout3 << "Frames with moving background: " << failCntTooManyPoints;
 
 		putText(img, sout1.str(), Point(5, 25), FONT_HERSHEY_SIMPLEX, 0.4, Scalar(0, 255, 0));
 		putText(img, sout2.str(), Point(5, 50), FONT_HERSHEY_SIMPLEX, 0.4, Scalar(0, 255, 0));
+		putText(img, sout3.str(), Point(5, 75), FONT_HERSHEY_SIMPLEX, 0.4, Scalar(0, 255, 0));
 
 		imshow("img", img);
 		imshow("bw", filtered);
@@ -78,6 +83,7 @@ using namespace cv;
 		vector<Mat> channels;
 
 		int color = detectionParameters.laserColor;
+
 
 		if (!(averaging.data))
 		{
@@ -122,6 +128,13 @@ using namespace cv;
 			}
 		}
 
+		tooManyPoints = false;
+
+		if (newFoundPoints.size() > 4)
+		{
+			tooManyPoints = true;
+			failCntTooManyPoints++;
+		}
 		Point2i closest = closestPoint(lastPoint, newFoundPoints);
 		Point2i mostIntense = largestIntensityPoint(newFoundPoints, channels[color]);
 
@@ -184,11 +197,14 @@ using namespace cv;
 
 	Point2i LaserPointerTracker::newPoint(Point2i closest, Point2i mostIntense)
 	{
+		if (tooManyPoints)
+			return Point2i(0, 0);
+
 		if (closest == Point2i(0, 0))
 		{
 			if (mostIntense == Point2i(0, 0))
 			{
-				noPoints++;
+				failCntNoPoints++;
 				return  Point2i(0, 0);
 			}
 			else
@@ -197,7 +213,7 @@ using namespace cv;
 		else
 		if (closest != mostIntense)
 		{
-			moreThanOnePoints++;
+			failCntUndecideable++;
 			return Point2i(0, 0);
 		}
 		else

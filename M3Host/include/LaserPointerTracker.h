@@ -26,8 +26,13 @@ class LaserPointerTracker : public ObjectTracker{
 	
 	Point2i lastPoint;
 	Mat averaging;
-	int noPoints;
-	int moreThanOnePoints;
+	int failCntNoPoints;
+	int failCntUndecideable;
+	int failCntTooManyPoints;
+
+	bool tooManyPoints;
+
+
 
 public:
 	LaserPointerTracker();
