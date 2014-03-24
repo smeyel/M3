@@ -23,7 +23,7 @@ void Ball::DrawLine(Mat &img)
 	{
 		Point2i Pointi(BallData[i].x, BallData[i].y);
 		Point2i Pointj(BallData[i + 1].x, BallData[i + 1].y);
-		line(img, Pointi,Pointj, Scalar(255, 0, 0));
+		line(img, Pointi,Pointj, Scalar(255, 0, 0),2);
 	}
 }
 

@@ -9,6 +9,7 @@
 #include "ObjectTracker.h"
 #include "DetectionParameters.h"
 #include "Ball.h"
+#include "BallTrackerConfigManager.h"
 
 using namespace cv;
 using namespace std;
@@ -34,6 +35,16 @@ class BallTracker : public ObjectTracker{
 	-For how many frames it cannot be detected
 	*/
 	vector<Ball> Balls;
+	//Detection Parameterts
+	Scalar HSVlow;
+	Scalar HSVhigh;
+	double CollidedBallsAreaRate;
+	int MinSquareDistanceToCreateNewBall;
+	int FramesNeededToDetectCollision;
+	int FramesNeededToDropBall;
+	int ContourMinSize;
+	int SquareDistanceToInvolveCollision;
+	int ErosionSize;
 
 public:
 	// Constructor
@@ -51,7 +62,7 @@ public:
 		@param Low: minimum values for HSV filter
 		@param High: maximum values for HSV filter
 	*/
-	void FindBallContoursUsingHSV(Mat& img, Scalar Low, Scalar High);
+	void FindBallContoursUsingHSV(Mat& img, bool UseErosion=false);
 	/*  Matches contours with previously tracked balls. If it can't find, creates new Ball
 		For match, it uses the last coords of each tracked ball,
 		or uses first order predict.
@@ -82,11 +93,12 @@ public:
 		@param radius: uses for decide whether it's a collision
 		@param ClosestVisibleBall: marks Collision
 	*/
-	bool CollisionDetection(Point2f &center, float &radius, int &ClosestVisibleBall);
+	bool CollisionDetection(Point2f &center, float &radius, int &ClosestVisibleBall, int ContourIndex, Mat& fortesting);
 	/*  Draws the travelled road for each visible Ball
 		@param img: draws here
 	*/
 	void DrawVisibleBallRoutes(Mat &img);
+	void ErodeFrame(Mat &img);
 	~BallTracker();
 };
 
