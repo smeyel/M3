@@ -4,7 +4,6 @@
 using namespace cv;
 
 	LaserPointerTracker::LaserPointerTracker() {
-	detectionParameters = DetectionParameters();
 	failCntUndecideable = 0;
 	failCntNoPoints = 0;
 	failCntTooManyPoints = 0;
@@ -13,27 +12,8 @@ using namespace cv;
 }
 	
 	void LaserPointerTracker::init(const char *configfilename){
-		detectionParameters.loadParametersFrom(configfilename);
+		configManager.readconfig(configfilename);
 	}
-
-/**
- * For testing!
- */
-	void LaserPointerTracker::addTestWindows(Mat& filteredImage,
-		vector<Vec3f>& circles, Mat& img) {
-
-	namedWindow("circles", CV_WINDOW_AUTOSIZE);
-	namedWindow("teszt", CV_WINDOW_AUTOSIZE);
-	for (unsigned int i = 0; i < circles.size(); i++) {
-		Point center(round(circles[i][0]), round(circles[i][1]));
-		//radius a 3. parameter circles[0][2]
-		circle(img, center, 200 / 32, Scalar(0, 0, 255), 2, 8);
-	}
-
-	imshow("teszt", filteredImage);
-	imshow("circles", img);
-}
-
 
 	void LaserPointerTracker::addWindowsAndCounters(Mat& filtered, Mat& img)
 	{
@@ -48,46 +28,21 @@ using namespace cv;
 		putText(img, sout2.str(), Point(5, 50), FONT_HERSHEY_SIMPLEX, 0.4, Scalar(0, 255, 0));
 		putText(img, sout3.str(), Point(5, 75), FONT_HERSHEY_SIMPLEX, 0.4, Scalar(0, 255, 0));
 
+		//TODO: only the last camera's pictures shows, becouse the windows have the same name. Should use cameraID or else.
 		imshow("img", img);
 		imshow("bw", filtered);
 	}
 
 
 	void LaserPointerTracker::processFrame(Mat& img){
-		/*
-		//Jani:
-		Mat filtered, hsvframe;
-		//vector<Vec3f> circles;
-
-		const Size dsize(img.rows, img.cols);
-
-		cvtColor(img, hsvframe, CV_BGR2HSV);
-
-		inRange(hsvframe, detectionParameters.minColorThreshold,
-			detectionParameters.maxColorThreshold, filtered);
-
-		GaussianBlur(filtered, filtered, Size(), 3, 3); // size 9,9 ; 2,2
-
-		HoughCircles(filtered, lastFoundObjectCoords, CV_HOUGH_GRADIENT, 1, dsize.height / 4,
-			detectionParameters.houghParam1, detectionParameters.houghParam2,
-			detectionParameters.minRadius, detectionParameters.maxRadius);
-
-		addTestWindows(filtered, lastFoundObjectCoords, img);
 		
-		//returns the coords and radius of the found circles.
-		//return circles;
-		*/
-
-		//DZs's algorithm:
 		Mat frameout;
 		vector<Mat> channels;
 
-		int color = detectionParameters.laserColor;
-
+		int color = configManager.laserColor;
 
 		if (!(averaging.data))
 		{
-			
 			split(img, channels);
 			averaging = channels[color];
 			return;
@@ -101,7 +56,8 @@ using namespace cv;
 		addWeighted(averaging, 0.9, channels[color], 0.1, 0, averaging);
 	
 		//background subtraction + tresholding
-		addWeighted(channels[color], 1, averaging, -1, -detectionParameters.lowerTreshold, frameout);
+		//addWeighted(channels[color], 1, averaging, -1, -detectionParameters.lowerTreshold, frameout);
+		addWeighted(channels[color], 1, averaging, -1, -configManager.lowerTreshold, frameout);
 
 		//increase contrast
 		frameout.convertTo(frameout, -1, 100, 0);
@@ -118,8 +74,8 @@ using namespace cv;
 		{
 			Moments mom = moments(contours[i], true);
 			double area = contourArea(contours[i]);
-			
-			if ((area > detectionParameters.minArea) && (area < detectionParameters.maxArea)) 
+
+			if ((area > configManager.minArea) && (area < configManager.maxArea))
 			{
 				double posX = mom.m10 / area;
 				double posY = mom.m01 / area;
@@ -139,23 +95,32 @@ using namespace cv;
 		Point2i mostIntense = largestIntensityPoint(newFoundPoints, channels[color]);
 
 		
-		lastPoint = newPoint(closest, mostIntense);
+			lastPoint = newPoint(closest, mostIntense);
 		
 		addWindowsAndCounters(frameout, img);
+	};
+
+	Point2f LaserPointerTracker::getLastPoint(){
+		return  (Point2f)lastPoint;
 	}
 
 
 
 
 
-	//distance between two points:
+	/*
+	Returns with the distance between two points.
+	*/
 	int LaserPointerTracker::sqDist(Point2i a, Point2i b)
 	{
 		return ((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));
 	}
 
 
-	//Find the closest new point to the old one:
+
+	/*
+	Finds the closest point from <new_points> to the last found point.
+	*/
 	Point2i LaserPointerTracker::closestPoint(Point2i last, vector<Point2i> new_points)
 	{
 		
@@ -178,6 +143,9 @@ using namespace cv;
 		}
 	}
 
+	/*
+	Finds and returns with the largest intensity point on the given image.
+	*/
 	Point2i LaserPointerTracker::largestIntensityPoint(vector<Point2i> points, Mat img)
 	{
 		int max = 0;
@@ -192,7 +160,6 @@ using namespace cv;
 		}
 		return points[idx];
 	}
-
 
 
 	Point2i LaserPointerTracker::newPoint(Point2i closest, Point2i mostIntense)
@@ -219,6 +186,8 @@ using namespace cv;
 		else
 			return mostIntense;
 	}
+
+
 
 	LaserPointerTracker::~LaserPointerTracker() {
 }
