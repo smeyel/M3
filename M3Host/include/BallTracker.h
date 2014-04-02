@@ -5,9 +5,7 @@
 #include <opencv2/imgproc/imgproc_c.h>
 #include <opencv2/opencv.hpp>
 
-
 #include "ObjectTracker.h"
-#include "DetectionParameters.h"
 #include "Ball.h"
 #include "BallTrackerConfigManager.h"
 
@@ -99,6 +97,9 @@ public:
 	*/
 	void DrawVisibleBallRoutes(Mat &img);
 	void ErodeFrame(Mat &img);
+
+	Point2f getLastPoint();
+
 	~BallTracker();
 };
 

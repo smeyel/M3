@@ -219,7 +219,7 @@ void BallTracker::processFrame(Mat& img){
 	waitKey(0);
 }
 
-
+Point2f BallTracker::getLastPoint(){ return Point2f(); }
 
 BallTracker::~BallTracker() {
 }

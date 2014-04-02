@@ -4,13 +4,13 @@
 #include <iostream>
 #include <stdlib.h>
 #include "SimpleIniConfigReader.h"
-#include "DetectionParameters.h"
-
+#include "TrackerConfigManager.h"
 using namespace LogConfigTime;
 using namespace std;
 
 class LaserConfigManager
 {
+public:
 	virtual bool readconfig(const char* filename)
 	{
 		SimpleIniConfigReader *SIreader = new SimpleIniConfigReader(filename);
@@ -40,12 +40,15 @@ class LaserConfigManager
 
 	}
 
-public:
+
 
 	LaserConfigManager(const char* filename)
 	{
 		readconfig(filename);
 	}
+
+	LaserConfigManager(){};
+	
 
 	int laserColor;
 	int lowerTreshold;

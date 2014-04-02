@@ -3,7 +3,6 @@
 #include <iostream>
 #include <stdlib.h>
 #include "SimpleIniConfigReader.h"
-#include "DetectionParameters.h"
 
 using namespace LogConfigTime;
 using namespace std;
