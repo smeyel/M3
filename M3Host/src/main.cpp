@@ -1,7 +1,7 @@
 #include <iostream>
 //#include "opencv2/highgui.h"
 #include <opencv2/opencv.hpp>
-
+#define _WINSOCKAPI_
 //#include "PhoneProxy.h"
 #include "stdlib.h"
 #include "StdoutLogger.h"

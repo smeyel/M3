@@ -21,9 +21,6 @@
     <ClCompile Include="src\BallTracker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\DetectionParameters.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\LaserPointerTracker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -45,9 +42,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\CameraRemoteConfigManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DetectionParameters.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\LaserPointerTracker.h">
