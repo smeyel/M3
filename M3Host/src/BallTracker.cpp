@@ -110,6 +110,7 @@ void BallTracker::FindBallContoursUsingHSV(Mat& img, bool UseErosion)
 	cvtColor(img, imgHSV, CV_BGR2HSV);
 	inRange(imgHSV, HSVlow, HSVhigh, imgThresh);
 	if (UseErosion) ErodeFrame(imgThresh);
+	imshow("Thresh", imgThresh);
 	findContours(imgThresh, Contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
 }
 
@@ -184,7 +185,7 @@ void BallTracker::MatchContoursWithBalls(Mat& fortesting, bool UsePredict)
 			}
 			else
 			{
-				//if (!CollisionDetection(center, radius, ClosestVisibleBall,i,fortesting))
+				if (!CollisionDetection(center, radius, ClosestVisibleBall,i,fortesting))
 					Balls[ClosestVisibleBall].UpdateData((int)center.x, (int)center.y, (int)radius);
 			}
 			circle(fortesting, (Point2i)center, (int)radius, Scalar(255, 0, 0),2); // for testing
@@ -212,11 +213,12 @@ void BallTracker::ErodeFrame(Mat& img)
 }
 
 void BallTracker::processFrame(Mat& img){
-	FindBallContoursUsingHSV(img,true);
+	FindBallContoursUsingHSV(img);
 	MatchContoursWithBalls(img,true);
 	DrawVisibleBallRoutes(img);
 	imshow("pic", img);
-	waitKey(0);
+	waitKey(30);
+	//waitKey(0);
 }
 
 Point2f BallTracker::getLastPoint(){ return Point2f(); }
