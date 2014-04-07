@@ -110,6 +110,7 @@
     <ClCompile Include="src\Ball.cpp" />
     <ClCompile Include="src\BallTracker.cpp" />
     <ClCompile Include="src\LaserPointerTracker.cpp" />
+    <ClCompile Include="src\LaserScanner.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ObjectTracker.cpp" />
     <ClCompile Include="src\RemoteTrackerDevice.cpp" />
@@ -122,6 +123,7 @@
     <ClInclude Include="include\CameraRemoteConfigManager.h" />
     <ClInclude Include="include\LaserConfigManager.h" />
     <ClInclude Include="include\LaserPointerTracker.h" />
+    <ClInclude Include="include\LaserScanner.h" />
     <ClInclude Include="include\ObjectTracker.h" />
     <ClInclude Include="include\RemoteTrackerDevice.h" />
     <ClInclude Include="include\TrackerCamera.h" />

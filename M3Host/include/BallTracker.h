@@ -23,6 +23,8 @@ using namespace std;
 class BallTracker : public ObjectTracker{
 	// Stores contours for each object
 	vector<vector<Point2i>> Contours;
+	vector<Point2i> ContourCenter;
+	vector<int> ContourRadius;
 	// Stores the indexes of balls which collided (smaller index, bigger index) 
 	vector<Point2i> Collisions;
 	// Stores the coords of each Collision
@@ -61,12 +63,14 @@ public:
 		@param High: maximum values for HSV filter
 	*/
 	void FindBallContoursUsingHSV(Mat& img, bool UseErosion=false);
+	void CalculateContourParams();
 	/*  Matches contours with previously tracked balls. If it can't find, creates new Ball
 		For match, it uses the last coords of each tracked ball,
 		or uses first order predict.
 		@param fortesting: original picture so it can draw on it
 		@param UsePredict: false->last coords ; true->prediction
 	*/
+	void MatchBallsWithContours(Mat &fortesting, bool UsePredict = false);
 	void MatchContoursWithBalls(Mat &fortesting, bool UsePredict = false);
 	/*  Calculates the square of the distance of to coords
 		@param First,Second: the two points
@@ -91,7 +95,7 @@ public:
 		@param radius: uses for decide whether it's a collision
 		@param ClosestVisibleBall: marks Collision
 	*/
-	bool CollisionDetection(Point2f &center, float &radius, int &ClosestVisibleBall, int ContourIndex, Mat& fortesting);
+	bool CollisionDetection(Point2i &center, int &radius, int &ClosestVisibleBall, int ContourIndex, Mat& fortesting);
 	/*  Draws the travelled road for each visible Ball
 		@param img: draws here
 	*/
