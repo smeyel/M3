@@ -83,6 +83,7 @@ public:
 		@param UsePredict: false>last coords ; true->prediction
 	*/
 	int FindClosestVisibleBall(Point2i &NewBall, bool UsePredict = false);
+	int FindClosestContour(int BallID, bool UsePredict = false);
 	/*	Finds the second nearest tracked Ball to the currently find ball, used by CollisionDetection
 		For searching, it uses the last coords of each tracked ball,
 		or uses first order predict.
