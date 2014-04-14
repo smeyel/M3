@@ -210,13 +210,15 @@ void BallTracker::MatchBallsWithContours(Mat &fortesting, bool UsePredict)
 			}
 			else
 			{
-				//if (!CollisionDetection(ContourCenter[ClosestContour], ContourRadius[ClosestContour], i, ClosestContour, fortesting))
-				Balls[i].UpdateData(ContourCenter[ClosestContour].x, ContourCenter[ClosestContour].y, ContourRadius[ClosestContour]);
-				circle(fortesting, ContourCenter[ClosestContour], ContourRadius[ClosestContour], Scalar(255, 0, 0), 2); // for testing
+				int ClosestVisibleBall = FindClosestVisibleBall(ContourCenter[ClosestContour], UsePredict);
+				if (!CollisionDetection(ContourCenter[ClosestContour], ContourRadius[ClosestContour], ClosestVisibleBall, ClosestContour, fortesting))
+				{
+					Balls[i].UpdateData(ContourCenter[ClosestContour].x, ContourCenter[ClosestContour].y, ContourRadius[ClosestContour]);
+					circle(fortesting, ContourCenter[ClosestContour], ContourRadius[ClosestContour], Scalar(255, 0, 0), 2); // for testing
+				}
 				Contours.erase(Contours.begin() + ClosestContour);
 				ContourCenter.erase(ContourCenter.begin() + ClosestContour);
 				ContourRadius.erase(ContourRadius.begin() + ClosestContour);
-
 			}
 		}
 		
@@ -274,8 +276,8 @@ void BallTracker::ErodeFrame(Mat& img)
 void BallTracker::processFrame(Mat& img){
 	FindBallContoursUsingHSV(img);
 	CalculateContourParams();
-	//MatchContoursWithBalls(img);
-	MatchBallsWithContours(img);
+	//MatchContoursWithBalls(img,true);
+	MatchBallsWithContours(img,true);
 	DrawVisibleBallRoutes(img);
 	imshow("pic", img);
 	waitKey(30);
