@@ -21,8 +21,6 @@ public:
 	// Tracker settings:
 	BallType trackerType;
 	BallColor trackerColor;
-	bool saveToFile;
-	string destination;
 	 
 	TrackerConfigManager()
 	{
@@ -65,8 +63,6 @@ virtual bool readTrackerConfiguration(const char* filename)
 		cout << "Invalid tracker type in " << filename << endl;
 		exit(-1);
 	}
-	saveToFile = reader->getBoolValue("main", "saveToFile");
-	destination = reader->getStringValue("main", "destination");
 
 
 

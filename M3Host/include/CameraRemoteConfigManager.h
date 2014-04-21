@@ -17,7 +17,9 @@ class CameraRemoteConfigManager
 
 		ip_addr = reader->getStringValue("main", "proxyIP");
 		port = reader->getIntValue("main", "proxyPort");
-
+		saveToFile = reader->getBoolValue("main", "saveToFile");
+		destination = reader->getStringValue("main", "destination");
+		
 		delete SIreader;
 		return true;
 	}
@@ -32,7 +34,8 @@ public:
 	//Remote proxy settings:
 	std::string ip_addr;
 	int port;
-
+	bool saveToFile;
+	string destination;
 
 };
 

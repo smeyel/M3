@@ -26,10 +26,9 @@ public:
 	TrackerConfigManager config_tracker;
 	
 	/*
-	It is for saving frames into file.
+	It is for saving frames into puffer.
 	*/
-	VideoWriter oVideoWriter;
-
+	vector<Mat> VideoPuffer;
 	/*
 	True if the tracking is in progress.
 	*/
@@ -73,7 +72,9 @@ public:
 	Asking for an image and processing it.
 	*/
 	void processFrame();
+	
 
+	void savingToFile(int index);
 private:
 	/*
 	Camera port to connect to.

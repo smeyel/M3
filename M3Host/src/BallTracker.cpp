@@ -243,7 +243,6 @@ void BallTracker::processFrame(Mat& img){
 	DrawVisibleBallRoutes(img);
 	imshow("pic", img);
 	waitKey(30);
-	//waitKey(0);
 }
 
 Point2f BallTracker::getLastPoint(){ return Point2f(); }

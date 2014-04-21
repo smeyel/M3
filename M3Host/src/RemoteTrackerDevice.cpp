@@ -38,6 +38,17 @@ void RemoteTrackerDevice::startTracking(){
 		for (unsigned int i = 0; i < trackCams.size(); i++){
 			trackCams[i]->processFrame();
 		}
+		if (waitKey(30) == 27)
+		{
+			break;
+		}
+	}
+	for (unsigned int i = 0; i < trackCams.size(); i++)
+	{
+		if (trackCams[i]->saveToFile)
+		{
+			trackCams[i]->savingToFile(i);
+		}
 	}
 }
 
