@@ -47,7 +47,7 @@ bool TrackerCamera::init(const char* cameraInitFileName, const char* trackerInit
 	saveToFile = config_cam.saveToFile;
 	destination = config_cam.destination;
 	//TODO: calling tracker.init() it will call the trracker implementation's method
-
+	TimeReference = 0;
 	return initialized;
 }
 
@@ -99,7 +99,17 @@ void TrackerCamera::processFrame(){
 		}
 		this->needinit = false;
 	}
-		
+
+/*	if (TimeReference == 0)
+	{
+		camProxy->CaptureImage();
+		TimeReference = camProxy->lastImageTakenTimestamp;
+	}
+	else
+	{
+		camProxy->CaptureImage(TimeReference + 200000);
+		TimeReference = camProxy->lastImageTakenTimestamp;
+	}*/
 	camProxy->CaptureImage();
 	tracker->processFrame(*camProxy->lastImageTaken);
 	

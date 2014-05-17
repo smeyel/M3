@@ -29,6 +29,9 @@ class Ball
 	/*	Stores for how many frames the ball cannot be seen
 	*/
 	int LastSeen;
+	bool updated;
+
+	KalmanFilter KF;
 public:
 	//contstructors
 	Ball();
@@ -68,6 +71,9 @@ public:
 	/*	Returns LastSeen
 	*/
 	int GetLastSeen();
+	void DeInit();
+	void SetUpdated(bool updated);
+	bool GetUpdated();
 	//destructor
 	~Ball();
 };

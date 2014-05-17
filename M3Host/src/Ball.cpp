@@ -4,6 +4,8 @@ using namespace cv;
 
 Ball::Ball(){
 	LastSeen = 0;
+	SetUpdated(false);
+	KF.init(4, 2, 0);
 }
 
 Ball::Ball(int x, int y, int r){
@@ -43,6 +45,7 @@ void Ball::UpdateData(int x, int y, int r)
 {
 	Point3i Point(x, y, r);
 	BallData.push_back(Point);
+	SetUpdated(true);
 	DecrementLastSeen();
 }
 
@@ -78,6 +81,22 @@ void Ball::DecrementLastSeen()
 int Ball::GetLastSeen()
 {
 	return LastSeen;
+}
+
+void Ball::DeInit()
+{
+	this->IncrementLastSeen();
+	this->SetUpdated(false);
+}
+
+void Ball::SetUpdated(bool updated)
+{
+	this->updated = updated;
+}
+
+bool Ball::GetUpdated()
+{
+	return updated;
 }
 
 Ball::~Ball(){

@@ -49,6 +49,7 @@ public:
 	Used in processing to know if we initialized already.
 	*/
 	bool needinit;
+	__int64 TimeReference;
 
 	TrackerCamera();
 	~TrackerCamera();

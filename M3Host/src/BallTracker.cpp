@@ -154,7 +154,7 @@ bool BallTracker::CollisionDetection(Point2i &center, int &radius, int &ClosestV
 		vector<vector<Point2i>> SeparatedContours;
 		for (int i = 0; i < Balls.size(); i++)
 		{
-			if (Balls[i].GetVisible() && SquareDistance((Point2i)center, Balls[i].GetPosition()) < SquareDistanceToInvolveCollision)
+			if ((Balls[i].GetVisible()&&!Balls[i].GetUpdated()) && SquareDistance((Point2i)center, Balls[i].GetPosition()) < SquareDistanceToInvolveCollision)
 			{
 				BallsInCollision.push_back(i);
 				vector<Point2i> SingleContour;
@@ -163,7 +163,7 @@ bool BallTracker::CollisionDetection(Point2i &center, int &radius, int &ClosestV
 		}
 		
 
-		int ClosestBallInCollision;
+	//	int ClosestBallInCollision;
 		for (unsigned int i = 0; i < Contours[ContourIndex].size(); i++)
 		{
 			int ClosestBallInCollision=0;
@@ -197,11 +197,11 @@ void BallTracker::MatchBallsWithContours(Mat &fortesting, bool UsePredict)
 {
 	for (unsigned int i = 0; i < Balls.size(); i++)
 	{
-		Balls[i].IncrementLastSeen();
+		Balls[i].DeInit();
 	}
 	for ( int i = 0; i < Balls.size(); i++)
 	{
-		if (Balls[i].GetVisible())
+		if (Balls[i].GetVisible() && !Balls[i].GetUpdated())
 		{
 			int ClosestContour = FindClosestContour(i, UsePredict);
 			if (ClosestContour == -1) // nincs közeli kontúr
