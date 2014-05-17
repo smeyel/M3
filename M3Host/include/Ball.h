@@ -32,6 +32,8 @@ class Ball
 	bool updated;
 
 	KalmanFilter KF;
+	Mat_<float> measurement;
+	vector<Point3i> BallData_kalman;
 public:
 	//contstructors
 	Ball();
@@ -40,6 +42,7 @@ public:
 		@param img: draws heere
 	*/
 	void DrawLine(Mat &img);
+	void DrawLine_kalman(Mat &img);
 	/*	Returns the size of the balls road
 	*/
 	int GetSize();

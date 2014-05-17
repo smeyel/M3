@@ -259,7 +259,11 @@ void BallTracker::DrawVisibleBallRoutes(Mat &img)
 	for (unsigned int i = 0; i < Balls.size(); i++)
 	{
 		if (Balls[i].GetLastSeen()>FramesNeededToDropBall) Balls[i].SetVisible(false);
-		if (Balls[i].GetVisible()) Balls[i].DrawLine(img);
+		if (Balls[i].GetVisible())
+		{
+			Balls[i].DrawLine(img);
+			Balls[i].DrawLine_kalman(img);
+		}
 	}
 }
 
@@ -274,7 +278,7 @@ void BallTracker::ErodeFrame(Mat& img)
 }
 
 void BallTracker::processFrame(Mat& img){
-	FindBallContoursUsingHSV(img);
+	FindBallContoursUsingHSV(img,true);
 	CalculateContourParams();
 	//MatchContoursWithBalls(img,true);
 	MatchBallsWithContours(img,true);
