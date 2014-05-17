@@ -30,6 +30,8 @@ class BallTrackerConfigManager
 		ContourMinSize = reader->getIntValue("ball", "ContourMinSize");
 		SquareDistanceToInvolveCollision = reader->getIntValue("ball", "SquareDistanceToInvolveCollision");
 		ErosionSize = reader->getIntValue("ball", "ErosionSize");
+		UseErosion = reader->getIntValue("ball", "UseErosion");
+		UsePrediction = reader->getIntValue("ball", "UsePrediction");
 
 		delete SIreader;
 		return true;
@@ -57,6 +59,8 @@ public:
 	int ContourMinSize;
 	int SquareDistanceToInvolveCollision;
 	int ErosionSize;
+	int UseErosion;
+	int UsePrediction;
 
 };
 

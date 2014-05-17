@@ -92,6 +92,13 @@ Point2i Ball::PredictPosition()
 	}
 	else return this->GetPosition();
 }
+
+Point2i Ball::PredictPositionWithKalmanFilter()
+{
+	Mat prediction = KF.predict();
+	Point2i predictPt(prediction.at<float>(0), prediction.at<float>(1));
+	return predictPt;
+}
 void Ball::SetVisible(bool isVisible)
 {
 	visible = isVisible;

@@ -16,6 +16,8 @@ void BallTracker::init(const char *configfilename){
 	ContourMinSize = config.ContourMinSize;
 	SquareDistanceToInvolveCollision = config.SquareDistanceToInvolveCollision;
 	ErosionSize = config.ErosionSize;
+	UseErosion = config.UseErosion;
+	UsePrediction = config.UsePrediction;
 
 	return;
 }
@@ -23,7 +25,7 @@ void BallTracker::init(const char *configfilename){
 int BallTracker::SquareDistance(Point2i &First, Point2i &Second){
 	return (First.x - Second.x)*(First.x - Second.x) + (First.y - Second.y)*(First.y - Second.y);
 }
-int BallTracker::FindClosestContour(int BallID, bool UsePredict)
+int BallTracker::FindClosestContour(int BallID)
 {
 	int ClosestContour = 0;
 	if (Contours.empty()) return -1;
@@ -31,7 +33,7 @@ int BallTracker::FindClosestContour(int BallID, bool UsePredict)
 	{
 		for (unsigned int i = 1; i < Contours.size(); i++)
 		{
-			if (UsePredict)
+			if (this->UsePrediction)
 			{
 				if (SquareDistance(Balls[BallID].PredictPosition(), ContourCenter[i]) < SquareDistance(Balls[BallID].PredictPosition(), ContourCenter[ClosestContour]))
 					ClosestContour = i;
@@ -47,7 +49,7 @@ int BallTracker::FindClosestContour(int BallID, bool UsePredict)
 	}
 	return ClosestContour;
 }
-int BallTracker::FindClosestVisibleBall(Point2i &NewBall,bool UsePredict)
+int BallTracker::FindClosestVisibleBall(Point2i &NewBall)
 {
 	int ClosestBall = 0;
 	if (Balls.empty()) return -1;
@@ -62,7 +64,7 @@ int BallTracker::FindClosestVisibleBall(Point2i &NewBall,bool UsePredict)
 		{
 			if (Balls[i].GetVisible())
 			{
-				if (UsePredict)
+				if (UsePrediction)
 				{
 					if (SquareDistance(NewBall, Balls[i].PredictPosition())<SquareDistance(NewBall, Balls[ClosestBall].PredictPosition()))
 						ClosestBall = i;
@@ -80,7 +82,7 @@ int BallTracker::FindClosestVisibleBall(Point2i &NewBall,bool UsePredict)
 	return ClosestBall;
 }
 
-int BallTracker::FindSecondClosestVisileBall(Point2i &NewBall, bool UsePredict)
+int BallTracker::FindSecondClosestVisileBall(Point2i &NewBall)
 {
 	int ClosestBall = 0, SecondClosestBall = 0;
 	if (Balls.empty()) return -1;
@@ -111,7 +113,7 @@ int BallTracker::FindSecondClosestVisileBall(Point2i &NewBall, bool UsePredict)
 	return SecondClosestBall;
 }
 
-void BallTracker::FindBallContoursUsingHSV(Mat& img, bool UseErosion)
+void BallTracker::FindBallContoursUsingHSV(Mat& img)
 {
 	Mat imgThresh, imgHSV;
 	cvtColor(img, imgHSV, CV_BGR2HSV);
@@ -193,7 +195,7 @@ bool BallTracker::CollisionDetection(Point2i &center, int &radius, int &ClosestV
 	}
 }
 
-void BallTracker::MatchBallsWithContours(Mat &fortesting, bool UsePredict)
+void BallTracker::MatchBallsWithContours(Mat &fortesting)
 {
 	for (unsigned int i = 0; i < Balls.size(); i++)
 	{
@@ -203,15 +205,16 @@ void BallTracker::MatchBallsWithContours(Mat &fortesting, bool UsePredict)
 	{
 		if (Balls[i].GetVisible() && !Balls[i].GetUpdated())
 		{
-			int ClosestContour = FindClosestContour(i, UsePredict);
+			int ClosestContour = FindClosestContour(i);
 			if (ClosestContour == -1) // nincs közeli kontúr
 			{
 				Balls[i].IncrementLastSeen();
 			}
 			else
 			{
-				int ClosestVisibleBall = FindClosestVisibleBall(ContourCenter[ClosestContour], UsePredict);
-				if (!CollisionDetection(ContourCenter[ClosestContour], ContourRadius[ClosestContour], ClosestVisibleBall, ClosestContour, fortesting))
+				int ClosestVisibleBall = FindClosestVisibleBall(ContourCenter[ClosestContour]);
+				//TODO ClosestVisibleBall=-1 miért lesz (tippre, ha a labda kigurul a képrõl, és egy másik kapja meg az útvonalát
+				if (ClosestVisibleBall!=-1 && !CollisionDetection(ContourCenter[ClosestContour], ContourRadius[ClosestContour], ClosestVisibleBall, ClosestContour, fortesting))
 				{
 					Balls[i].UpdateData(ContourCenter[ClosestContour].x, ContourCenter[ClosestContour].y, ContourRadius[ClosestContour]);
 					circle(fortesting, ContourCenter[ClosestContour], ContourRadius[ClosestContour], Scalar(255, 0, 0), 2); // for testing
@@ -230,7 +233,7 @@ void BallTracker::MatchBallsWithContours(Mat &fortesting, bool UsePredict)
 		circle(fortesting, ContourCenter[i], ContourRadius[i], Scalar(255, 0, 0), 2); // for testing
 	}
 }
-void BallTracker::MatchContoursWithBalls(Mat& fortesting, bool UsePredict)
+void BallTracker::MatchContoursWithBalls(Mat& fortesting)
 {
 	for (unsigned int i = 0; i < Balls.size(); i++)
 	{
@@ -239,7 +242,7 @@ void BallTracker::MatchContoursWithBalls(Mat& fortesting, bool UsePredict)
 
 	for (unsigned int i = 0; i < Contours.size(); i++)
 	{
-		int ClosestVisibleBall = FindClosestVisibleBall(ContourCenter[i], UsePredict);
+		int ClosestVisibleBall = FindClosestVisibleBall(ContourCenter[i]);
 		if (ClosestVisibleBall == -1) // új labda
 		{
 			Ball NewBall(ContourCenter[i].x, ContourCenter[i].y, ContourRadius[i]);
@@ -278,10 +281,9 @@ void BallTracker::ErodeFrame(Mat& img)
 }
 
 void BallTracker::processFrame(Mat& img){
-	FindBallContoursUsingHSV(img,true);
+	FindBallContoursUsingHSV(img);
 	CalculateContourParams();
-	//MatchContoursWithBalls(img,true);
-	MatchBallsWithContours(img,true);
+	MatchBallsWithContours(img);
 	DrawVisibleBallRoutes(img);
 	imshow("pic", img);
 	waitKey(30);

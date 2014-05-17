@@ -59,6 +59,7 @@ public:
 		First order prediction
 	*/
 	Point2i PredictPosition();
+	Point2i PredictPositionWithKalmanFilter();
 	/*	Sets the visibility
 	*/
 	void SetVisible(bool isVisible);

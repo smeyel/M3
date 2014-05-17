@@ -45,6 +45,8 @@ class BallTracker : public ObjectTracker{
 	int ContourMinSize;
 	int SquareDistanceToInvolveCollision;
 	int ErosionSize;
+	int UseErosion;
+	int UsePrediction;
 
 public:
 	// Constructor
@@ -62,7 +64,7 @@ public:
 		@param Low: minimum values for HSV filter
 		@param High: maximum values for HSV filter
 	*/
-	void FindBallContoursUsingHSV(Mat& img, bool UseErosion=false);
+	void FindBallContoursUsingHSV(Mat& img);
 	void CalculateContourParams();
 	/*  Matches contours with previously tracked balls. If it can't find, creates new Ball
 		For match, it uses the last coords of each tracked ball,
@@ -70,8 +72,8 @@ public:
 		@param fortesting: original picture so it can draw on it
 		@param UsePredict: false->last coords ; true->prediction
 	*/
-	void MatchBallsWithContours(Mat &fortesting, bool UsePredict = false);
-	void MatchContoursWithBalls(Mat &fortesting, bool UsePredict = false);
+	void MatchBallsWithContours(Mat &fortesting);
+	void MatchContoursWithBalls(Mat &fortesting);
 	/*  Calculates the square of the distance of to coords
 		@param First,Second: the two points
 	*/
@@ -82,15 +84,15 @@ public:
 		@param NewBall: Found ball on the newest frame
 		@param UsePredict: false>last coords ; true->prediction
 	*/
-	int FindClosestVisibleBall(Point2i &NewBall, bool UsePredict = false);
-	int FindClosestContour(int BallID, bool UsePredict = false);
+	int FindClosestVisibleBall(Point2i &NewBall);
+	int FindClosestContour(int BallID);
 	/*	Finds the second nearest tracked Ball to the currently find ball, used by CollisionDetection
 		For searching, it uses the last coords of each tracked ball,
 		or uses first order predict.
 		@param NewBall: Found ball on the newest frame
 		@param UsePredict: false>last coords ; true->prediction
 	*/
-	int FindSecondClosestVisileBall(Point2i &NewBall, bool UsePredict = false);
+	int FindSecondClosestVisileBall(Point2i &NewBall);
 	/*  Searches for Collision, where two tracked ball merges
 		@param center: searches here
 		@param radius: uses for decide whether it's a collision
