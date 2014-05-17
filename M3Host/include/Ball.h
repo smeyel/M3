@@ -30,14 +30,14 @@ class Ball
 	*/
 	int LastSeen;
 	bool updated;
-
+	int UseKalmanFilter;
 	KalmanFilter KF;
 	Mat_<float> measurement;
 	vector<Point3i> BallData_kalman;
 public:
 	//contstructors
 	Ball();
-	Ball(int x, int y, int z);
+	Ball(int x, int y, int z, int UseKalmanFilter = 0);
 	/*	Draws the travelled road for a Ball
 		@param img: draws heere
 	*/

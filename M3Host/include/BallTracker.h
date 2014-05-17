@@ -47,6 +47,8 @@ class BallTracker : public ObjectTracker{
 	int ErosionSize;
 	int UseErosion;
 	int UsePrediction;
+	int UseKalmanFilter;
+	int BallsSearchContours;
 
 public:
 	// Constructor

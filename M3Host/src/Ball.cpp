@@ -5,31 +5,36 @@ using namespace cv;
 Ball::Ball(){
 	LastSeen = 0;
 	SetUpdated(false);
-	KF.init(4, 2, 0);
-	Mat_<float> mes(2, 1); mes.setTo(Scalar(0));
-	this->measurement = mes;
+	UseKalmanFilter = 0;
 }
 
-Ball::Ball(int x, int y, int r){
+Ball::Ball(int x, int y, int r, int UseKalmanFilter){
 	Point3i Point(x, y, r);
 	BallData.push_back(Point);
-	BallData_kalman.push_back(Point);
+
 	visible = true;
 	LastSeen = 0;
-	SetUpdated(false);
-	KF.init(4, 2, 0);
-	Mat_<float> mes(2, 1); mes.setTo(Scalar(0));
-	this->measurement = mes;
-	KF.statePre.at<float>(0) = x;
-	KF.statePre.at<float>(1) = y;
-	KF.statePre.at<float>(2) = 0;
-	KF.statePre.at<float>(3) = 0;
-	KF.transitionMatrix = *(Mat_<float>(4, 4) << 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+	SetUpdated(true);
+	this->UseKalmanFilter = UseKalmanFilter;
+	if (this->UseKalmanFilter)
+	{
+		KF.init(6, 2, 0);
+		Mat_<float> mes(2, 1); mes.setTo(Scalar(0));
+		this->measurement = mes;
+		KF.statePre.at<float>(0) = x;
+		KF.statePre.at<float>(1) = y;
+		KF.statePre.at<float>(2) = 0;
+		KF.statePre.at<float>(3) = 0;
+		KF.statePre.at<float>(4) = 0;
+		KF.statePre.at<float>(5) = 0;
+		KF.transitionMatrix = *(Mat_<float>(6, 6) << 1, 0, 1, 0, 0.5, 0, 0, 1, 0, 1, 0, 0.5, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1);
 
-	setIdentity(KF.measurementMatrix);
-	setIdentity(KF.processNoiseCov, Scalar::all(1e-4));
-	setIdentity(KF.measurementNoiseCov, Scalar::all(1e-4));
-	setIdentity(KF.errorCovPost, Scalar::all(.1));
+		setIdentity(KF.measurementMatrix);
+		setIdentity(KF.processNoiseCov, Scalar::all(1e-4));
+		setIdentity(KF.measurementNoiseCov, Scalar::all(1e-3));
+		setIdentity(KF.errorCovPost, Scalar::all(.1));
+		BallData_kalman.push_back(Point);
+	}
 }
 
 int Ball::GetSize()
@@ -43,6 +48,12 @@ void Ball::DrawLine(Mat &img)
 		Point2i Pointi(BallData[i].x, BallData[i].y);
 		Point2i Pointj(BallData[i + 1].x, BallData[i + 1].y);
 		line(img, Pointi,Pointj, Scalar(255, 0, 0),2);
+		if (UseKalmanFilter)
+		{
+			Point2i Pointi(BallData_kalman[i].x, BallData_kalman[i].y);
+			Point2i Pointj(BallData_kalman[i + 1].x, BallData_kalman[i + 1].y);
+			line(img, Pointi, Pointj, Scalar(0, 0, 255), 2);
+		}
 	}
 }
 void Ball::DrawLine_kalman(Mat& img)
@@ -73,13 +84,15 @@ void Ball::UpdateData(int x, int y, int r)
 	BallData.push_back(Point);
 	SetUpdated(true);
 	DecrementLastSeen();
-
-	KF.predict();
-	measurement(0) = x;
-	measurement(1) = y;
-	Mat estimated = KF.correct(measurement);
-	Point3i newdata_kalman(estimated.at<float>(0), estimated.at<float>(1),r);
-	BallData_kalman.push_back(newdata_kalman);
+	if (UseKalmanFilter)
+	{
+		KF.predict();
+		measurement(0) = x;
+		measurement(1) = y;
+		Mat estimated = KF.correct(measurement);
+		Point3i newdata_kalman(estimated.at<float>(0), estimated.at<float>(1), r);
+		BallData_kalman.push_back(newdata_kalman);
+	}
 }
 
 Point2i Ball::PredictPosition()

@@ -18,6 +18,8 @@ void BallTracker::init(const char *configfilename){
 	ErosionSize = config.ErosionSize;
 	UseErosion = config.UseErosion;
 	UsePrediction = config.UsePrediction;
+	UseKalmanFilter = config.UseKalmanFilter;
+	BallsSearchContours = config.BallsSearchContours;
 
 	return;
 }
@@ -228,7 +230,7 @@ void BallTracker::MatchBallsWithContours(Mat &fortesting)
 	}
 	for (unsigned int i = 0; i < Contours.size(); i++)
 	{
-		Ball NewBall(ContourCenter[i].x, ContourCenter[i].y, ContourRadius[i]);
+		Ball NewBall(ContourCenter[i].x, ContourCenter[i].y, ContourRadius[i],UseKalmanFilter);
 		Balls.push_back(NewBall);
 		circle(fortesting, ContourCenter[i], ContourRadius[i], Scalar(255, 0, 0), 2); // for testing
 	}
@@ -237,7 +239,7 @@ void BallTracker::MatchContoursWithBalls(Mat& fortesting)
 {
 	for (unsigned int i = 0; i < Balls.size(); i++)
 	{
-		Balls[i].IncrementLastSeen();
+		Balls[i].DeInit();
 	}
 
 	for (unsigned int i = 0; i < Contours.size(); i++)
@@ -245,7 +247,7 @@ void BallTracker::MatchContoursWithBalls(Mat& fortesting)
 		int ClosestVisibleBall = FindClosestVisibleBall(ContourCenter[i]);
 		if (ClosestVisibleBall == -1) // új labda
 		{
-			Ball NewBall(ContourCenter[i].x, ContourCenter[i].y, ContourRadius[i]);
+			Ball NewBall(ContourCenter[i].x, ContourCenter[i].y, ContourRadius[i],UseKalmanFilter);
 			Balls.push_back(NewBall);
 		}
 		else
@@ -265,7 +267,6 @@ void BallTracker::DrawVisibleBallRoutes(Mat &img)
 		if (Balls[i].GetVisible())
 		{
 			Balls[i].DrawLine(img);
-			Balls[i].DrawLine_kalman(img);
 		}
 	}
 }
@@ -283,7 +284,8 @@ void BallTracker::ErodeFrame(Mat& img)
 void BallTracker::processFrame(Mat& img){
 	FindBallContoursUsingHSV(img);
 	CalculateContourParams();
-	MatchBallsWithContours(img);
+	if (BallsSearchContours) MatchBallsWithContours(img);
+	else MatchContoursWithBalls(img);
 	DrawVisibleBallRoutes(img);
 	imshow("pic", img);
 	waitKey(30);

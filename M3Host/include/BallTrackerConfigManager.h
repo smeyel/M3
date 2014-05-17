@@ -32,6 +32,8 @@ class BallTrackerConfigManager
 		ErosionSize = reader->getIntValue("ball", "ErosionSize");
 		UseErosion = reader->getIntValue("ball", "UseErosion");
 		UsePrediction = reader->getIntValue("ball", "UsePrediction");
+		UseKalmanFilter = reader->getIntValue("ball", "UseKalmanFilter");
+		BallsSearchContours = reader->getIntValue("ball", "BallsSearchContours");
 
 		delete SIreader;
 		return true;
@@ -61,6 +63,8 @@ public:
 	int ErosionSize;
 	int UseErosion;
 	int UsePrediction;
+	int UseKalmanFilter;
+	int BallsSearchContours;
 
 };
 
