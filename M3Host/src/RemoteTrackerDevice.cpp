@@ -18,7 +18,7 @@ bool RemoteTrackerDevice::init(const char* initFile){
 	vector<ObjectsToMatch*> tempObjectsToMatch;
 	tempObjectsToMatch.push_back(trackCams[0]->tracker->getObjectsToMatch());
 	tempObjectsToMatch.push_back(trackCams[1]->tracker->getObjectsToMatch());
-	ObjectMatcher = new BallMatcher(tempObjectsToMatch);
+	pObjectMatcher = new BallMatcher(tempObjectsToMatch);
 	return initialized;
 }
 
@@ -50,7 +50,7 @@ void RemoteTrackerDevice::startTracking(){
 		{
 			break;
 		}
-		ObjectMatcher->MatchObjects();
+		pObjectMatcher->MatchObjects();
 	}
 	for (unsigned int i = 0; i < trackCams.size(); i++)
 	{
@@ -70,6 +70,6 @@ RemoteTrackerDevice::~RemoteTrackerDevice()
 			trackCams[i] = NULL;
 		}
 	}
-	delete ObjectMatcher;
+	delete pObjectMatcher;
 }
 

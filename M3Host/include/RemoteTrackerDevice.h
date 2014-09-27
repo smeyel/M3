@@ -1,3 +1,5 @@
+#pragma once
+
 #include "CameraRemoteProxy.h"
 #include "ObjectTracker.h"
 #include "ObjectMatcher.h"
@@ -15,7 +17,7 @@ public:
 	Cameras used by the device.
 	*/
 	vector<TrackerCamera*> trackCams;
-	ObjectMatcher* ObjectMatcher;
+	ObjectMatcher* pObjectMatcher;
 	RemoteTrackerDevice();
 	virtual ~RemoteTrackerDevice();
 

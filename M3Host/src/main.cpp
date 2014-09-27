@@ -13,7 +13,7 @@
 #include "camera.h"
 #include "PhoneProxy.h"
 #include "RemoteTrackerDevice.h"
-
+#include "LaserScanner.h"
 
 
 using namespace std;
