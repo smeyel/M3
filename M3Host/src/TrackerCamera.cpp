@@ -108,12 +108,6 @@ void TrackerCamera::processFrame(){
 	tracker->processFrame(*camProxy->lastImageTaken);
 	tracker->drawOnImage(*camProxy->lastImageTaken, TrackerCameraName);
 	
-	if (saveToFile){
-		//Writes the frame into a puffer.
-		VideoPuffer.push_back(camProxy->lastImageTaken->clone());
-	}
-
-	
 }
 
 

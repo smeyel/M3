@@ -76,6 +76,13 @@ void RemoteTrackerDevice::startTracking(){
 			names.push_back(&trackCams[i]->TrackerCameraName);
 		}
 		pObjectMatcher->MatchObjects(images,names);
+		for (unsigned int i = 0; i < trackCams.size(); i++){
+			if (trackCams[i]->saveToFile){
+				//Writes the frame into a puffer.
+				trackCams[i]->VideoPuffer.push_back(trackCams[i]->camProxy->lastImageTaken->clone());
+			}
+		}
+
 	}
 	for (unsigned int i = 0; i < trackCams.size(); i++)
 	{
