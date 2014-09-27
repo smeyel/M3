@@ -12,6 +12,8 @@ bool RemoteTrackerDevice::init(const char* initFile){
 	bool initialized = true;
 	trackCams.push_back(new TrackerCamera());
 	trackCams[0]->init("remote.ini", "tracker.ini");
+	trackCams.push_back(new TrackerCamera());
+	trackCams[1]->init("remote2.ini", "tracker2.ini");
 	return initialized;
 }
 
@@ -37,6 +39,7 @@ void RemoteTrackerDevice::startTracking(){
 	while (1){
 		for (unsigned int i = 0; i < trackCams.size(); i++){
 			trackCams[i]->processFrame();
+			imshow("picture"+i, *trackCams[i]->camProxy->lastImageTaken);
 		}
 		if (waitKey(30) == 27)
 		{

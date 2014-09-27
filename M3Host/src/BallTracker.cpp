@@ -121,7 +121,7 @@ void BallTracker::FindBallContoursUsingHSV(Mat& img)
 	cvtColor(img, imgHSV, CV_BGR2HSV);
 	inRange(imgHSV, HSVlow, HSVhigh, imgThresh);
 	if (UseErosion) ErodeFrame(imgThresh);
-	imshow("Thresh", imgThresh);
+	//imshow("Thresh", imgThresh);
 	findContours(imgThresh, Contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
 }
 void BallTracker::CalculateContourParams()
@@ -287,8 +287,8 @@ void BallTracker::processFrame(Mat& img){
 	if (BallsSearchContours) MatchBallsWithContours(img);
 	else MatchContoursWithBalls(img);
 	DrawVisibleBallRoutes(img);
-	imshow("pic", img);
-	waitKey(30);
+	//imshow("pic", img);
+	//waitKey(30);
 }
 
 Point2f BallTracker::getLastPoint(){ return Point2f(); }
