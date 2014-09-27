@@ -117,6 +117,7 @@
     <ClCompile Include="src\ObjectMatcher.cpp" />
     <ClCompile Include="src\ObjectsToMatch.cpp" />
     <ClCompile Include="src\ObjectTracker.cpp" />
+    <ClCompile Include="src\PointCloudViewer.cpp" />
     <ClCompile Include="src\RemoteTrackerDevice.cpp" />
     <ClCompile Include="src\TrackerCamera.cpp" />
   </ItemGroup>
@@ -133,6 +134,7 @@
     <ClInclude Include="include\ObjectMatcher.h" />
     <ClInclude Include="include\ObjectsToMatch.h" />
     <ClInclude Include="include\ObjectTracker.h" />
+    <ClInclude Include="include\PointCloudViewer.h" />
     <ClInclude Include="include\RemoteTrackerDevice.h" />
     <ClInclude Include="include\TrackerCamera.h" />
     <ClInclude Include="include\TrackerConfigManager.h" />

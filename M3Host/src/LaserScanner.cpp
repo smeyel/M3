@@ -1,8 +1,36 @@
 #include "LaserScanner.h"
 
 
+
+
 LaserScanner::LaserScanner()
 {
+#ifdef MULTITHREAD_MODE
+  InitializeCriticalSection(&crit);
+
+  Viewer = new PointCloudViewer(&crit, &FoundCoordinates);
+
+  unsigned uiThreadID;
+
+  handle = (HANDLE)_beginthreadex(NULL,
+    0,
+    PointCloudViewer::ThreadViewerStaticStartup,
+    Viewer,
+    CREATE_SUSPENDED,
+    &uiThreadID);
+
+  if (handle == 0)
+    printf("Failed to create thread\n");
+
+  DWORD dwEcitCode;
+
+  GetExitCodeThread(handle, &dwEcitCode);
+  printf("Thread exit code = %u\n", dwEcitCode);
+
+
+
+  ResumeThread(handle);   // Jaeschke's   // t1->Start();
+#endif
 }
 
 bool LaserScanner::init(const char* initFile){
@@ -12,6 +40,10 @@ bool LaserScanner::init(const char* initFile){
 	trackCams[0]->init("remote.ini", "tracker.ini");
 	trackCams[1]->init("remote2.ini", "tracker.ini");
 	this->meshFile.open("meshLab.asc", ios::app);
+
+
+
+
 	return initialized;
 }
 
@@ -30,6 +62,13 @@ void LaserScanner::make3DCoords(){
 	{
 	
 		export3DCoordsToFile(meshFile, Ray::getIntersection(rays, 0));
+
+#ifdef MULTITHREAD_MODE
+    EnterCriticalSection(&crit);
+    FoundCoordinates.push_back(Ray::getIntersection(rays, 0));
+    LeaveCriticalSection(&crit);
+#endif
+
 	}
 }
 
@@ -65,4 +104,20 @@ void LaserScanner::startTracking(){
 LaserScanner::~LaserScanner()
 {
 	meshFile.close();
+#ifdef MULTITHREAD_MODE
+  WaitForSingleObject(handle, INFINITE);
+
+  DWORD dwEcitCode;
+  GetExitCodeThread(handle, &dwEcitCode);
+  printf("thread 1 exited with code %u\n", dwEcitCode);
+
+
+  // The handle returned by _beginthreadex() has to be closed
+  // by the caller of _beginthreadex().
+
+  CloseHandle(handle);
+
+  delete Viewer;
+  Viewer = NULL;
+#endif
 }

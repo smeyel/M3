@@ -1,11 +1,27 @@
+#pragma once
+
 #include "RemoteTrackerDevice.h"
+#include "PointCloudViewer.h"
+#include <vector>
 
 /*
 Laser Scanner implementation.
 */
 class LaserScanner : public RemoteTrackerDevice
 {
+
+
 public:
+
+#ifdef MULTITHREAD_MODE
+  PointCloudViewer* Viewer;
+  CRITICAL_SECTION crit;
+  HANDLE handle;
+#endif
+  /*
+  Vector to store the 3d coordinates of the scanned point cloud
+  */
+  vector<Matx41f> FoundCoordinates;
 
 	/*
 	Output file to save 3d points for programs that can display 3d triangular meshes.
