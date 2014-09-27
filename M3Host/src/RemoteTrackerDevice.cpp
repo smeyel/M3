@@ -26,6 +26,8 @@ bool RemoteTrackerDevice::init(const char* initFile){
 void RemoteTrackerDevice::connectToAllCamera(){
 	for (unsigned int i = 0; i < trackCams.size(); i++){
 		trackCams[i]->connect();
+    trackCams[i]->camProxy->chessboarddetector->chessboard.boardSize.width = 7;
+    trackCams[i]->camProxy->chessboarddetector->chessboard.boardSize.height = 5;
 	}
 }
 
