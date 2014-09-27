@@ -35,7 +35,7 @@ public:
 	Processing a frame with the tracker.
 	*/
 	virtual void processFrame(Mat &src)=0;
-	virtual void drawOnImage(Mat&,string,int) = 0;
+	virtual void drawOnImage(Mat&,string) = 0;
 
 	~ObjectTracker();
 };

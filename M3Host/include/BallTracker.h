@@ -63,7 +63,7 @@ public:
 		Find and track balls in img
 	*/
 	void processFrame(Mat& img);
-	void drawOnImage(Mat&,string,int);
+	void drawOnImage(Mat&,string);
 	// init
 	void init(const char *configfilename);
 	/*  Makes binary image with HSV filtering between Low and High values.

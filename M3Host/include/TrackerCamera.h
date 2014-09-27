@@ -10,6 +10,7 @@
 class TrackerCamera
 {
 public:
+	string TrackerCameraName;
 
 	/*
 	Camera implementation.

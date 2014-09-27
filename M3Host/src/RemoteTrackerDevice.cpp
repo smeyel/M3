@@ -69,7 +69,13 @@ void RemoteTrackerDevice::startTracking(){
 		{
 			break;
 		}
-		pObjectMatcher->MatchObjects();
+		vector<Mat*> images;
+		vector<string*> names;
+		for (unsigned int i = 0; i < trackCams.size(); i++){
+			images.push_back(trackCams[i]->camProxy->lastImageTaken);
+			names.push_back(&trackCams[i]->TrackerCameraName);
+		}
+		pObjectMatcher->MatchObjects(images,names);
 	}
 	for (unsigned int i = 0; i < trackCams.size(); i++)
 	{

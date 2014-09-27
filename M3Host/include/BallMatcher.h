@@ -17,7 +17,7 @@ public:
 	BallMatcher();
 	BallMatcher(vector<ObjectsToMatch*>);
 	void init(const char *configfilename);
-	void MatchObjects();
+	void MatchObjects(vector<Mat*>,vector<string*>);
 	~BallMatcher();
 };
 

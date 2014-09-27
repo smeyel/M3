@@ -74,7 +74,7 @@ public:
 	*/
 	int sqDist(Point2i a, Point2i b);
 
-	void drawOnImage(Mat&,string,int);
+	void drawOnImage(Mat&,string);
 
 	virtual ~LaserPointerTracker();
 };

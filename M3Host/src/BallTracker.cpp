@@ -297,12 +297,9 @@ void BallTracker::processFrame(Mat& img){
 	//waitKey(30);
 }
 
-void BallTracker::drawOnImage(Mat &src,string ip, int port)
+void BallTracker::drawOnImage(Mat &src,string name)
 {
 	DrawVisibleBallRoutes(src);
-	char temp[30];
-	sprintf_s(temp, 25, "%s:%d", ip.c_str(), port);
-	imshow(temp, src);
 }
 
 Point2f BallTracker::getLastPoint(){ return Point2f(); }

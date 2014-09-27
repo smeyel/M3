@@ -18,7 +18,7 @@ public:
 	ObjectMatcher();
 	ObjectMatcher(vector<ObjectsToMatch>);
 	virtual void init(const char *configfilename) = 0;
-	virtual void MatchObjects() = 0;
+	virtual void MatchObjects(vector<Mat*>,vector<string*>) = 0;
 	~ObjectMatcher();
 };
 

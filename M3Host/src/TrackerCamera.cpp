@@ -44,6 +44,9 @@ bool TrackerCamera::init(const char* cameraInitFileName, const char* trackerInit
 	CameraRemoteConfigManager config_cam(cameraInitFileName);
 	port = config_cam.port;
 	ip_addr = config_cam.ip_addr;
+	char temp[30];
+	sprintf_s(temp, 25, "%s:%d", ip_addr.c_str(), port);
+	TrackerCameraName = string(temp);
 	saveToFile = config_cam.saveToFile;
 	destination = config_cam.destination;
 	//TODO: calling tracker.init() it will call the trracker implementation's method
@@ -87,16 +90,12 @@ bool TrackerCamera::calibrate()
 	waitKey(30);
 	if (camProxy->CaptureAndTryCalibration(true))
 	{
-		char temp[30];
-		sprintf_s(temp,25, "%s:%d", ip_addr.c_str(), port);
-		imshow(temp, *camProxy->lastImageTaken);
+		imshow(TrackerCameraName, *camProxy->lastImageTaken);
 		return true;
 	}
 	else
 	{
-		char temp[30];
-		sprintf_s(temp,25, "%s:%d", ip_addr.c_str(), port);
-		imshow(temp, *camProxy->lastImageTaken);
+		imshow(TrackerCameraName, *camProxy->lastImageTaken);
 		return false;
 	}
 }
@@ -107,7 +106,7 @@ void TrackerCamera::disconnect(){
 void TrackerCamera::processFrame(){
 	camProxy->CaptureImage();
 	tracker->processFrame(*camProxy->lastImageTaken);
-	tracker->drawOnImage(*camProxy->lastImageTaken,ip_addr,port);
+	tracker->drawOnImage(*camProxy->lastImageTaken, TrackerCameraName);
 	
 	if (saveToFile){
 		//Writes the frame into a puffer.
