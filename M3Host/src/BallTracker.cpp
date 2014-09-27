@@ -1,8 +1,13 @@
 #include "BallTracker.h"
-
+#include "BallsToMatch.h"
 using namespace cv;
 
 BallTracker::BallTracker() {
+}
+
+ObjectsToMatch* BallTracker::getObjectsToMatch()
+{
+	return (ObjectsToMatch*)&BallsToMatchData;
 }
 
 void BallTracker::init(const char *configfilename){
@@ -20,6 +25,8 @@ void BallTracker::init(const char *configfilename){
 	UsePrediction = config.UsePrediction;
 	UseKalmanFilter = config.UseKalmanFilter;
 	BallsSearchContours = config.BallsSearchContours;
+
+	BallsToMatchData.BallData = &Balls;
 
 	return;
 }

@@ -10,6 +10,10 @@ using namespace cv;
 
 	tooManyPoints = false;
 }
+	ObjectsToMatch* LaserPointerTracker::getObjectsToMatch()
+	{
+		return NULL;
+	}
 	
 	void LaserPointerTracker::init(const char *configfilename){
 		configManager.readconfig(configfilename);

@@ -5,7 +5,7 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/core/mat.hpp>
-
+#include "ObjectsToMatch.h"
 #include "TimeMeasurement.h"
 #include "camera.h"
 using namespace cv;
@@ -17,8 +17,7 @@ Tracker Base interface.
 class ObjectTracker
 {
 public:
-	Camera *camera;
-	TimeMeasurement *timeMeasurement=NULL;
+
 	ObjectTracker();
 
 	/*
@@ -31,6 +30,7 @@ public:
 	*/
 	virtual Point2f getLastPoint()=0;
 
+	virtual ObjectsToMatch* getObjectsToMatch() = 0;
 	/*
 	Processing a frame with the tracker.
 	*/

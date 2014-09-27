@@ -108,22 +108,30 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Ball.cpp" />
+    <ClCompile Include="src\BallMatcher.cpp" />
+    <ClCompile Include="src\BallsToMatch.cpp" />
     <ClCompile Include="src\BallTracker.cpp" />
     <ClCompile Include="src\LaserPointerTracker.cpp" />
     <ClCompile Include="src\LaserScanner.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\ObjectMatcher.cpp" />
+    <ClCompile Include="src\ObjectsToMatch.cpp" />
     <ClCompile Include="src\ObjectTracker.cpp" />
     <ClCompile Include="src\RemoteTrackerDevice.cpp" />
     <ClCompile Include="src\TrackerCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Ball.h" />
+    <ClInclude Include="include\BallMatcher.h" />
+    <ClInclude Include="include\BallsToMatch.h" />
     <ClInclude Include="include\BallTracker.h" />
     <ClInclude Include="include\BallTrackerConfigManager.h" />
     <ClInclude Include="include\CameraRemoteConfigManager.h" />
     <ClInclude Include="include\LaserConfigManager.h" />
     <ClInclude Include="include\LaserPointerTracker.h" />
     <ClInclude Include="include\LaserScanner.h" />
+    <ClInclude Include="include\ObjectMatcher.h" />
+    <ClInclude Include="include\ObjectsToMatch.h" />
     <ClInclude Include="include\ObjectTracker.h" />
     <ClInclude Include="include\RemoteTrackerDevice.h" />
     <ClInclude Include="include\TrackerCamera.h" />

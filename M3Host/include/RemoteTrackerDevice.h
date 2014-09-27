@@ -1,5 +1,7 @@
 #include "CameraRemoteProxy.h"
 #include "ObjectTracker.h"
+#include "ObjectMatcher.h"
+#include "BallMatcher.h"
 #include "LaserPointerTracker.h"
 #include "TrackerCamera.h"
 #include <fstream>
@@ -13,7 +15,7 @@ public:
 	Cameras used by the device.
 	*/
 	vector<TrackerCamera*> trackCams;
-
+	ObjectMatcher* ObjectMatcher;
 	RemoteTrackerDevice();
 	virtual ~RemoteTrackerDevice();
 

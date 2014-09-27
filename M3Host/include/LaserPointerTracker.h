@@ -13,6 +13,7 @@
 #include <opencv2/opencv.hpp>
 
 #include "ObjectTracker.h"
+#include "ObjectsToMatch.h"
 #include "LaserConfigManager.h"
 
 #include <fstream>
@@ -35,6 +36,8 @@ class LaserPointerTracker : public ObjectTracker{
 
 public:
 	LaserPointerTracker();
+
+	ObjectsToMatch* getObjectsToMatch();
 
 	/*
 	Tracker initialization.

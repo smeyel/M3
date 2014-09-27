@@ -8,6 +8,7 @@
 #include "ObjectTracker.h"
 #include "Ball.h"
 #include "BallTrackerConfigManager.h"
+#include "BallsToMatch.h"
 
 using namespace cv;
 using namespace std;
@@ -21,6 +22,8 @@ using namespace std;
 	*/
 
 class BallTracker : public ObjectTracker{
+
+	BallsToMatch BallsToMatchData;
 	// Stores contours for each object
 	vector<vector<Point2i>> Contours;
 	vector<Point2i> ContourCenter;
@@ -53,6 +56,8 @@ class BallTracker : public ObjectTracker{
 public:
 	// Constructor
 	BallTracker();
+
+	ObjectsToMatch* getObjectsToMatch();
 
 	/*  Main processing function, only calls other functions
 		Find and track balls in img
