@@ -29,6 +29,7 @@ int main()
 	scanner.init("scannerInitFileName");
 	cout << "Connecting..." << endl;
 	scanner.connectToAllCamera();
+	scanner.calibrateAllCamera();
 	scanner.startTracking();
 	scanner.disconnectFromAllCamera();
 

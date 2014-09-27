@@ -33,6 +33,10 @@ public:
 	virtual void connectToAllCamera();
 
 	/*
+	Calibrate all cameras.
+	*/
+	virtual void calibrateAllCamera();
+	/*
 	Disconnects from all cameras.
 	*/
 	virtual void disconnectFromAllCamera();

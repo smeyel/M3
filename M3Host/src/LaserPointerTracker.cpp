@@ -192,6 +192,12 @@ using namespace cv;
 	}
 
 
+	void LaserPointerTracker::drawOnImage(Mat &src,string ip,int port)
+	{
+
+	}
+
+
 
 	LaserPointerTracker::~LaserPointerTracker() {
 }

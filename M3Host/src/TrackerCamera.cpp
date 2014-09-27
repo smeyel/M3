@@ -80,38 +80,34 @@ void TrackerCamera::savingToFile(int index)
 
 void TrackerCamera::connect(){
 	camProxy->Connect(ip_addr.c_str(), port);
+}
 
+bool TrackerCamera::calibrate()
+{
+	waitKey(30);
+	if (camProxy->CaptureAndTryCalibration(true))
+	{
+		char temp[30];
+		sprintf_s(temp,25, "%s:%d", ip_addr.c_str(), port);
+		imshow(temp, *camProxy->lastImageTaken);
+		return true;
+	}
+	else
+	{
+		char temp[30];
+		sprintf_s(temp,25, "%s:%d", ip_addr.c_str(), port);
+		imshow(temp, *camProxy->lastImageTaken);
+		return false;
+	}
 }
 void TrackerCamera::disconnect(){
 	camProxy->Disconnect();
 }
 
 void TrackerCamera::processFrame(){
-	if (needinit){
-		cv::Mat image(480, 640, CV_8UC3);
-
-		if (config_tracker.trackerType == LASER){
-			
-			if (!camProxy->CaptureUntilCalibrated(30))
-			{
-				cout << "Camera is not calibrated!" << endl;
-			}
-		}
-		this->needinit = false;
-	}
-
-/*	if (TimeReference == 0)
-	{
-		camProxy->CaptureImage();
-		TimeReference = camProxy->lastImageTakenTimestamp;
-	}
-	else
-	{
-		camProxy->CaptureImage(TimeReference + 200000);
-		TimeReference = camProxy->lastImageTakenTimestamp;
-	}*/
 	camProxy->CaptureImage();
 	tracker->processFrame(*camProxy->lastImageTaken);
+	tracker->drawOnImage(*camProxy->lastImageTaken,ip_addr,port);
 	
 	if (saveToFile){
 		//Writes the frame into a puffer.

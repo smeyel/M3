@@ -29,6 +29,24 @@ void RemoteTrackerDevice::connectToAllCamera(){
 	}
 }
 
+void RemoteTrackerDevice::calibrateAllCamera()
+{
+	for (unsigned int j = 0; j < 10; j++)
+	{
+		for (unsigned int i = 0; i < trackCams.size(); i++){
+			if (trackCams[i]->calibrate())
+			{
+				cout << "Camera is calibrated" << endl;
+			}
+			else
+			{
+				cout << "Camera is NOT calibrated" << endl;
+			}
+		}
+	}
+
+}
+
 void RemoteTrackerDevice::disconnectFromAllCamera(){
 	
 	cout << "Disconnecting..." << endl;
@@ -44,7 +62,6 @@ void RemoteTrackerDevice::startTracking(){
 	while (1){
 		for (unsigned int i = 0; i < trackCams.size(); i++){
 			trackCams[i]->processFrame();
-			imshow("picture"+i, *trackCams[i]->camProxy->lastImageTaken);
 		}
 		if (waitKey(30) == 27)
 		{

@@ -10,6 +10,7 @@
 class TrackerCamera
 {
 public:
+
 	/*
 	Camera implementation.
 	*/
@@ -63,6 +64,12 @@ public:
 	Connecting to a camera.
 	*/
 	void connect();
+
+	/*
+	Calibrate camera
+	*/
+
+	bool calibrate();
 
 	/*
 	Disconnenting from camera.
