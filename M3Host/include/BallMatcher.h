@@ -13,11 +13,14 @@ using namespace cv;
 class BallMatcher : public ObjectMatcher
 {
 	vector<vector<Ball>*> BallsToMatchData;
+	vector<vector<int>> PairIndexes;
 public:
 	BallMatcher();
-	BallMatcher(vector<ObjectsToMatch*>);
+	BallMatcher(vector<ObjectsToMatch*> ObjectsToMatch, vector<Mat*> images, vector<string*> names);
 	void init(const char *configfilename);
-	void MatchObjects(vector<Mat*>,vector<string*>);
+	void MatchBalls();
+	void DrawOnImages();
+	void MatchObjects();
 	~BallMatcher();
 };
 

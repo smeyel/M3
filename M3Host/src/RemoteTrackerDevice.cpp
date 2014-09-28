@@ -18,7 +18,13 @@ bool RemoteTrackerDevice::init(const char* initFile){
 	vector<ObjectsToMatch*> tempObjectsToMatch;
 	tempObjectsToMatch.push_back(trackCams[0]->tracker->getObjectsToMatch());
 	tempObjectsToMatch.push_back(trackCams[1]->tracker->getObjectsToMatch());
-	pObjectMatcher = new BallMatcher(tempObjectsToMatch);
+	vector<Mat*> images;
+	images.push_back(trackCams[0]->camProxy->lastImageTaken);
+	images.push_back(trackCams[1]->camProxy->lastImageTaken);
+	vector<string*> names;
+	names.push_back(&trackCams[0]->TrackerCameraName);
+	names.push_back(&trackCams[1]->TrackerCameraName);
+	pObjectMatcher = new BallMatcher(tempObjectsToMatch,images,names);
 	return initialized;
 }
 
@@ -84,24 +90,17 @@ void RemoteTrackerDevice::startTracking(){
 		for (unsigned int i = 0; i < trackCams.size(); i++){
 			trackCams[i]->processFrame();
 		}
-		if (waitKey(30) == 27)
-		{
-			break;
-		}
-		vector<Mat*> images;
-		vector<string*> names;
-		for (unsigned int i = 0; i < trackCams.size(); i++){
-			images.push_back(trackCams[i]->camProxy->lastImageTaken);
-			names.push_back(&trackCams[i]->TrackerCameraName);
-		}
-		pObjectMatcher->MatchObjects(images,names);
+		pObjectMatcher->MatchObjects();
 		for (unsigned int i = 0; i < trackCams.size(); i++){
 			if (trackCams[i]->saveToFile){
 				//Writes the frame into a puffer.
 				trackCams[i]->VideoPuffer.push_back(trackCams[i]->camProxy->lastImageTaken->clone());
 			}
 		}
-
+		if (waitKey(30) == 27)
+		{
+			break;
+		}
 	}
 }
 
