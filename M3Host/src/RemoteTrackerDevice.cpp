@@ -154,7 +154,7 @@ void RemoteTrackerDevice::saveVideos()
 			for (unsigned j = 0; j < cameraCols; j++)
 			{
 				Mat roi(combine, Rect(j*widthMax, i*heightMax, widthMax, heightMax));
-				if ((i*cameraCols + j) < trackCams.size())
+				if ((i*cameraCols + j) < trackCams.size() && (imageNum<trackCams[i*cameraCols + j]->VideoPuffer.size()))
 				{
 					trackCams[i*cameraCols + j]->VideoPuffer[imageNum].copyTo(roi);
 				}
