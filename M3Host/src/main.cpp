@@ -31,6 +31,7 @@ int main()
 	scanner.connectToAllCamera();
 	scanner.calibrateAllCamera();
 	scanner.startTracking();
+	scanner.saveToFile();
 	scanner.disconnectFromAllCamera();
 
 	cout << "Done." << endl;

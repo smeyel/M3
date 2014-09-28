@@ -48,6 +48,7 @@ public:
 	/*
 	Save puffers to file
 	*/
-	virtual void saveVideos();
+	virtual void saveVideoPuffersToFile(string destiny, vector<vector<Mat>*> videoPuffers);
+	virtual void saveToFile();
 };
 

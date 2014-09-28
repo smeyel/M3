@@ -54,33 +54,6 @@ bool TrackerCamera::init(const char* cameraInitFileName, const char* trackerInit
 	return initialized;
 }
 
-void TrackerCamera::savingToFile(int index)
-{
-	string tempDestination;
-	VideoWriter oVideoWriter;
-	/* Save To File
-	For help look http://opencv-srf.blogspot.hu/2011/09/saving-images-videos_16.html */
-	double dWidth = 640; //get the width of frames of the video
-	double dHeight = 480; //get the height of frames of the video
-	cout << "Frame Size = " << dWidth << "x" << dHeight << endl;
-	Size frameSize(static_cast<int>(dWidth), static_cast<int>(dHeight));
-	tempDestination = "cam_";
-	tempDestination += to_string(index);
-	tempDestination += "_";
-	tempDestination += destination;
-	oVideoWriter = VideoWriter(tempDestination, CV_FOURCC('M', 'P', '4', '2'), 20, frameSize, true); //initialize the VideoWriter object 00
-	if (!oVideoWriter.isOpened()) //if not initialize the VideoWriter successfully, exit the program
-	{
-		cout << "ERROR: Failed to write the video" << endl;
-		return;
-	}
-	for (unsigned int i = 0; i < VideoPuffer.size(); i++)
-	{
-		oVideoWriter.write(VideoPuffer[i]);
-	}
-	oVideoWriter.release();
-}
-
 void TrackerCamera::connect(){
 	camProxy->Connect(ip_addr.c_str(), port);
 }

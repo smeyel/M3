@@ -82,8 +82,6 @@ public:
 	*/
 	void processFrame();
 	
-
-	void savingToFile(int index);
 private:
 	/*
 	Camera port to connect to.

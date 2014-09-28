@@ -62,6 +62,7 @@ void RemoteTrackerDevice::calibrateAllCamera()
       // else
 				  cout << "Camera is NOT calibrated" << endl;
 			}
+			trackCams[i]->VideoPuffer.push_back(trackCams[i]->camProxy->lastImageTaken->clone());
 		}
 	}
 
@@ -102,61 +103,104 @@ void RemoteTrackerDevice::startTracking(){
 		}
 
 	}
-	saveVideos();
 }
 
-void RemoteTrackerDevice::saveVideos()
+void RemoteTrackerDevice::saveToFile()
 {
 
-	//TODO: config dependent seperate or merged video
+	//TODO: config dependent separated or merged video
 
 	/*for (unsigned int i = 0; i < trackCams.size(); i++)
 	{
 		if (trackCams[i]->saveToFile)
 		{
-			trackCams[i]->savingToFile(i);
+			vector<vector<Mat>*> temp;
+			temp.push_back(&trackCams[i]->VideoPuffer);
+			string tempDestination;
+			tempDestination = "cam_";
+			tempDestination += to_string(i);
+			tempDestination += "_";
+			tempDestination += trackCams[i]->destination;
+			saveVideoPuffersToFile(tempDestination, temp);
 		}
 	}*/
-
-	int heightMax=0;
-	int widthMax=0;
+	vector<vector<Mat>*> temp;
 	for (unsigned int i = 0; i < trackCams.size(); i++)
 	{
-		if (trackCams[i]->VideoPuffer[i].rows > heightMax)
+		if (trackCams[i]->saveToFile)
 		{
-			heightMax = trackCams[i]->VideoPuffer[i].rows;
-		}
-		if (trackCams[i]->VideoPuffer[i].cols > widthMax)
-		{
-			widthMax = trackCams[i]->VideoPuffer[i].cols;
+			temp.push_back(&trackCams[i]->VideoPuffer);
 		}
 	}
-	int cameraCols = ceil(4.0*sqrt((double)heightMax*(double)trackCams.size() / (double)widthMax) / 3.0);
-	int cameraRows = ceil((((double)trackCams.size()-0.001)/(double)cameraCols));
+	saveVideoPuffersToFile("MergedVideo.avi", temp);
+}
+
+void RemoteTrackerDevice::saveVideoPuffersToFile(string destiny, vector<vector<Mat>*> videoPuffers)
+{
+	int heightMax = 0;
+	int widthMax = 0;
+	int cameraCols = 0;
+	int cameraRows = 0;
+	if (videoPuffers.empty())
+	{
+		cout << "ERROR: Empty puffer!" << endl;
+		return;
+	}
+	else
+	{
+		if (videoPuffers[0]->empty())
+		{
+			cout << "ERROR: Empty first video!" << endl;
+			return;
+		}
+	}
+	if (videoPuffers.size() == 1)
+	{
+		heightMax = (*videoPuffers[0])[0].rows;
+		widthMax = (*videoPuffers[0])[0].cols;
+		cameraCols = 1;
+		cameraRows = 1;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < videoPuffers.size(); i++)
+		{
+			if ((*videoPuffers[i])[0].rows > heightMax)
+			{
+				heightMax = (*videoPuffers[i])[0].rows;
+			}
+			if ((*videoPuffers[i])[0].cols > widthMax)
+			{
+				widthMax = (*videoPuffers[i])[0].cols;
+			}
+		}
+		cameraCols = ceil(4.0*sqrt((double)heightMax*(double)videoPuffers.size() / (double)widthMax) / 3.0);
+		cameraRows = ceil((((double)videoPuffers.size() - 0.001) / (double)cameraCols));
+	}
 
 	VideoWriter oVideoWriter;
 	/* Save To File
 	For help look http://opencv-srf.blogspot.hu/2011/09/saving-images-videos_16.html */
-	cout << "Frame Size = " << widthMax << "x" << heightMax << endl;
+	cout << "Frame Size = " << cameraCols*widthMax << "x" << cameraRows*heightMax << endl;
 	Size frameSize(cameraCols*widthMax,cameraRows*heightMax);
-	oVideoWriter = VideoWriter("MergedVideo.avi", CV_FOURCC('M', 'P', '4', '2'), 20, frameSize, true); //initialize the VideoWriter object 00
+	oVideoWriter = VideoWriter(destiny, CV_FOURCC('M', 'P', '4', '2'), 20, frameSize, true); //initialize the VideoWriter object 00
 	if (!oVideoWriter.isOpened()) //if not initialize the VideoWriter successfully, exit the program
 	{
 		cout << "ERROR: Failed to write the video" << endl;
 		return;
 	}
 
-	for (unsigned imageNum = 0; imageNum < trackCams[0]->VideoPuffer.size(); imageNum++)
+	for (unsigned imageNum = 0; imageNum < videoPuffers[0]->size(); imageNum++)
 	{
-		Mat combine = Mat::zeros(cameraRows*heightMax, cameraCols*widthMax, trackCams[0]->VideoPuffer[0].type());
+		Mat combine = Mat::zeros(cameraRows*heightMax, cameraCols*widthMax, (*videoPuffers[0])[0].type());
 		for (unsigned int i = 0; i < cameraRows; i++)
 		{
 			for (unsigned j = 0; j < cameraCols; j++)
 			{
 				Mat roi(combine, Rect(j*widthMax, i*heightMax, widthMax, heightMax));
-				if ((i*cameraCols + j) < trackCams.size() && (imageNum<trackCams[i*cameraCols + j]->VideoPuffer.size()))
+				if ((i*cameraCols + j) < videoPuffers.size() && (imageNum<videoPuffers[i*cameraCols + j]->size()))
 				{
-					trackCams[i*cameraCols + j]->VideoPuffer[imageNum].copyTo(roi);
+					(*videoPuffers[i*cameraCols + j])[imageNum].copyTo(roi);
 				}
 				else break;;
 			}
