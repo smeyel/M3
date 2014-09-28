@@ -36,30 +36,30 @@ void RemoteTrackerDevice::calibrateAllCamera()
 	for (unsigned int j = 0; j < 10; j++)
 	{
 		for (unsigned int i = 0; i < trackCams.size(); i++){
-      char fname[20];
-      sprintf_s(fname, 19, "Tmatrix_%d.xml", i);
-      bool iscalibrated = trackCams[i]->camProxy->camera->getIsTSet();
+     //char fname[20];
+     //sprintf_s(fname, 19, "Tmatrix_%d.xml", i);
+     // bool iscalibrated = trackCams[i]->camProxy->camera->getIsTSet();
 			if (trackCams[i]->calibrate())
 			{
-        if (!iscalibrated)
-          trackCams[i]->camProxy->camera->saveExtrinsicParams(fname);
+      //  if (!iscalibrated)
+      //    trackCams[i]->camProxy->camera->saveExtrinsicParams(fname);
 				cout << "Camera is calibrated" << endl;
 			}
 			else
 			{
-        if (!iscalibrated)
-        {
-          FileStorage fs(fname, FileStorage::READ);
-          if (fs.isOpened())
-          {
-            fs.release();
-            trackCams[i]->camProxy->camera->loadExtrinsicParams(fname);
-          }
-          else
-            cout << "Camera is NOT calibrated" << endl;
-        }
-
-        else
+      //  if (!iscalibrated)
+      //  {
+      //    FileStorage fs(fname, FileStorage::READ);
+      //    if (fs.isOpened())
+      //    {
+      //      fs.release();
+      //      trackCams[i]->camProxy->camera->loadExtrinsicParams(fname);
+      //    }
+      //   else
+      //     cout << "Camera is NOT calibrated" << endl;
+      // }
+      //
+      // else
 				  cout << "Camera is NOT calibrated" << endl;
 			}
 		}
