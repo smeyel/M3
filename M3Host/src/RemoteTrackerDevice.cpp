@@ -102,15 +102,65 @@ void RemoteTrackerDevice::startTracking(){
 		}
 
 	}
-	for (unsigned int i = 0; i < trackCams.size(); i++)
+	saveVideos();
+}
+
+void RemoteTrackerDevice::saveVideos()
+{
+
+	//TODO: config dependent seperate or merged video
+
+	/*for (unsigned int i = 0; i < trackCams.size(); i++)
 	{
 		if (trackCams[i]->saveToFile)
 		{
 			trackCams[i]->savingToFile(i);
 		}
-	}
-}
+	}*/
 
+	int heightMax=0;
+	int widthMax=0;
+	for (unsigned int i = 0; i < trackCams.size(); i++)
+	{
+		if (trackCams[i]->VideoPuffer[i].rows > heightMax)
+		{
+			heightMax = trackCams[i]->VideoPuffer[i].rows;
+		}
+		if (trackCams[i]->VideoPuffer[i].cols > widthMax)
+		{
+			widthMax = trackCams[i]->VideoPuffer[i].cols;
+		}
+	}
+	int cameraCols = ceil(4.0*sqrt((double)heightMax*(double)trackCams.size() / (double)widthMax) / 3.0);
+	int cameraRows = ceil((((double)trackCams.size()-0.001)/(double)cameraCols));
+
+	VideoWriter oVideoWriter;
+	/* Save To File
+	For help look http://opencv-srf.blogspot.hu/2011/09/saving-images-videos_16.html */
+	cout << "Frame Size = " << widthMax << "x" << heightMax << endl;
+	Size frameSize(cameraCols*widthMax,cameraRows*heightMax);
+	oVideoWriter = VideoWriter("MergedVideo.avi", CV_FOURCC('M', 'P', '4', '2'), 20, frameSize, true); //initialize the VideoWriter object 00
+	if (!oVideoWriter.isOpened()) //if not initialize the VideoWriter successfully, exit the program
+	{
+		cout << "ERROR: Failed to write the video" << endl;
+		return;
+	}
+
+	for (unsigned imageNum = 0; imageNum < trackCams[0]->VideoPuffer.size(); imageNum++)
+	{
+		Mat combine = Mat::zeros(cameraRows*heightMax, cameraCols*widthMax, trackCams[0]->VideoPuffer[0].type());
+		for (unsigned int i = 0; i < cameraRows; i++)
+		{
+			for (unsigned j = 0; j < cameraCols; j++)
+			{
+				Mat roi(combine, Rect(j*widthMax, i*heightMax, widthMax, heightMax));
+				trackCams[i*cameraRows + j]->VideoPuffer[imageNum].copyTo(roi);
+			}
+		}
+		oVideoWriter.write(combine.clone());
+	}
+	oVideoWriter.release();
+}
 
 RemoteTrackerDevice::~RemoteTrackerDevice()
 {
