@@ -45,5 +45,9 @@ public:
 	Starts the tracking process on the TrackerCameras.
 	*/
 	virtual void startTracking();
+	/*
+	Save puffers to file
+	*/
+	virtual void saveVideos();
 };
 
