@@ -1,7 +1,9 @@
 #include "ObjectMatcher.h"
+#include "camera.h"
 
-ObjectMatcher::ObjectMatcher(vector<ObjectsToMatch*> ObjectsToMatch, vector<Mat*> images, vector<string*> names)
+ObjectMatcher::ObjectMatcher(vector<Camera*> cameras, vector<ObjectsToMatch*> objectsToMatch, vector<Mat*> images, vector<string*> names)
 {
+	this->cameras = cameras;
 	this->images = images;
 	this->names = names;
 }

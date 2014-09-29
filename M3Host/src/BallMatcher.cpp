@@ -1,11 +1,12 @@
 #include "BallMatcher.h"
 #include "BallsToMatch.h"
+#include "camera.h"
 
-BallMatcher::BallMatcher(vector<ObjectsToMatch*> ObjectsToMatch, vector<Mat*> images, vector<string*> names) : ObjectMatcher(ObjectsToMatch,images,names)
+BallMatcher::BallMatcher(vector<Camera*> cameras, vector<ObjectsToMatch*> objectsToMatch, vector<Mat*> images, vector<string*> names) : ObjectMatcher(cameras, objectsToMatch, images, names)
 {
-	for (int i = 0; i < ObjectsToMatch.size(); i++)
+	for (int i = 0; i < objectsToMatch.size(); i++)
 	{
-		BallsToMatchData.push_back(((BallsToMatch*)(ObjectsToMatch[i]))->BallData);
+		BallsToMatchData.push_back(((BallsToMatch*)(objectsToMatch[i]))->BallData);
 	}
 }
 
@@ -59,6 +60,7 @@ void BallMatcher::DrawOnImages()
 }
 void BallMatcher::MatchObjects()
 {
+	LastPairIndexes = PairIndexes;
 	PairIndexes.erase(PairIndexes.begin(), PairIndexes.end());
 	MatchBalls();
 	DrawOnImages();

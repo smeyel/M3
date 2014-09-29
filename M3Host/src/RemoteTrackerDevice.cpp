@@ -15,16 +15,19 @@ bool RemoteTrackerDevice::init(const char* initFile){
 	trackCams.push_back(new TrackerCamera());
 	trackCams[1]->init("remote2.ini", "tracker2.ini");
 	//TODO: Depends on config
-	vector<ObjectsToMatch*> tempObjectsToMatch;
-	tempObjectsToMatch.push_back(trackCams[0]->tracker->getObjectsToMatch());
-	tempObjectsToMatch.push_back(trackCams[1]->tracker->getObjectsToMatch());
+	vector<ObjectsToMatch*> objectsToMatch;
+	objectsToMatch.push_back(trackCams[0]->tracker->getObjectsToMatch());
+	objectsToMatch.push_back(trackCams[1]->tracker->getObjectsToMatch());
 	vector<Mat*> images;
 	images.push_back(trackCams[0]->camProxy->lastImageTaken);
 	images.push_back(trackCams[1]->camProxy->lastImageTaken);
 	vector<string*> names;
 	names.push_back(&trackCams[0]->TrackerCameraName);
 	names.push_back(&trackCams[1]->TrackerCameraName);
-	pObjectMatcher = new BallMatcher(tempObjectsToMatch,images,names);
+	vector<Camera*> cameras;
+	cameras.push_back(trackCams[0]->camProxy->camera);
+	cameras.push_back(trackCams[1]->camProxy->camera);
+	pObjectMatcher = new BallMatcher(cameras,objectsToMatch,images,names);
 	return initialized;
 }
 

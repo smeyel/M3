@@ -16,10 +16,11 @@ class ObjectMatcher
 {
 
 public:
+	vector<Camera*> cameras;
 	vector<Mat*> images;
 	vector<string*> names;
 	ObjectMatcher();
-	ObjectMatcher(vector<ObjectsToMatch*> ObjectsToMatch,vector<Mat*> images, vector<string*> names);
+	ObjectMatcher(vector<Camera*> cameras, vector<ObjectsToMatch*> objectsToMatch,vector<Mat*> images, vector<string*> names);
 	virtual void init(const char *configfilename) = 0;
 	virtual void MatchObjects() = 0;
 	~ObjectMatcher();
