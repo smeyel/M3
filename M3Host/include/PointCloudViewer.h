@@ -3,10 +3,11 @@
 
 #include <vector>
 
+#include "camera.h"
 
 #include <opencv2/opencv.hpp>
 
-//#define MULTITHREAD_MODE  //!!!! Uncomment this to enable multithread mode
+#define MULTITHREAD_MODE  //!!!! Uncomment this to enable multithread mode
 
 
 
@@ -23,6 +24,11 @@ class PointCloudViewer
   
 private:
   std::vector<cv::Matx41f> *Coordinates;
+  Camera view;
+  cv::Mat ViewPic;
+
+  unsigned ViewerHeight;
+  unsigned ViewerWidth;
 
 #ifdef MULTITHREAD_MODE
   CRITICAL_SECTION* critical;
@@ -43,5 +49,7 @@ public:
 
 
   void ViewerMain();
+
+  void DrawAxes();
 
 };
