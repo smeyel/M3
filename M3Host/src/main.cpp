@@ -19,10 +19,10 @@ int main()
 
 	PhoneProxy proxy;
 	cout << "Connecting..." << endl;
-	//proxy.Connect("192.168.0.8", 6000);
-	//proxy.Connect("127.0.0.1", 6000);
-	//proxy.Connect("192.168.1.107", 6000);
-	const char* host = "152.66.159.87";
+	//const char* host = "192.168.0.8";
+	//const char* host = "127.0.0.1";
+	const char* host = "192.168.1.107";
+//	const char* host = "152.66.159.87";
 	const int port = 6000;
 	proxy.Connect(host, port);
 
