@@ -4,7 +4,7 @@
 
 #include "PhoneProxy.h"
 #include "stdlib.h"
-#include "StdoutLogger.h"
+#include "StdOutLogger.h"
 //#include "myconfigmanager.h"
 #include "JpegMessage.h"
 
@@ -20,7 +20,11 @@ int main()
 	PhoneProxy proxy;
 	cout << "Connecting..." << endl;
 	//proxy.Connect("192.168.0.8", 6000);
-	proxy.Connect("127.0.0.1", 6000);
+	//proxy.Connect("127.0.0.1", 6000);
+	//proxy.Connect("192.168.1.107", 6000);
+	const char* host = "152.66.159.87";
+	const int port = 6000;
+	proxy.Connect(host, port);
 
 	cv::Mat image(480, 640, CV_8UC3);
 	while (running)
@@ -36,7 +40,10 @@ int main()
 			cout << "Receiving photo..." << endl;
 			
 			JsonMessage *msg = proxy.ReceiveNew();
+			cout << "Message ready" << endl;
 			JpegMessage *imgMsg = (JpegMessage*)msg;
+			cout << "ImageMsg ready: " << imgMsg->data.size() << endl;
+
 			imgMsg->Decode(&image);
 			cv::rectangle(image, cv::Rect(20, 20, 100, 100), cv::Scalar(255, 0, 0));
 			cv::imshow("PICTURE", image);
