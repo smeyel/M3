@@ -7,7 +7,7 @@
 
 #include <opencv2/opencv.hpp>
 
-#define MULTITHREAD_MODE  //!!!! Uncomment this to enable multithread mode
+//#define MULTITHREAD_MODE  //!!!! Uncomment this to enable multithread mode
 
 
 
@@ -24,6 +24,8 @@ class PointCloudViewer
   
 private:
   std::vector<cv::Matx41f> *Coordinates;
+  std::vector<cv::Matx41f> ImportedCoordinates; //used when imprting mesh from file
+
   Camera view;
   cv::Mat ViewPic;
 
@@ -51,5 +53,11 @@ public:
   void ViewerMain();
 
   void DrawAxes();
+
+  void Translate3D(float x, float y, float z);
+  void Scale3D(float scale);
+  void Rotate(float wx, float wy, float wz);
+
+  void DrawAll();
 
 };
