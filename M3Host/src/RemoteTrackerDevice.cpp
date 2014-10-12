@@ -42,7 +42,7 @@ void RemoteTrackerDevice::connectToAllCamera(){
 
 void RemoteTrackerDevice::calibrateAllCamera()
 {
-	for (unsigned int j = 0; j < 10; j++)
+	for (unsigned int j = 0; j < 20; j++)
 	{
 		for (unsigned int i = 0; i < trackCams.size(); i++){
      //char fname[20];
@@ -50,9 +50,9 @@ void RemoteTrackerDevice::calibrateAllCamera()
      // bool iscalibrated = trackCams[i]->camProxy->camera->getIsTSet();
 			if (trackCams[i]->calibrate())
 			{
+				trackCams[i]->isCalibrated = true;
       //  if (!iscalibrated)
       //    trackCams[i]->camProxy->camera->saveExtrinsicParams(fname);
-				cout << "Camera is calibrated" << endl;
 			}
 			else
 			{
@@ -69,9 +69,20 @@ void RemoteTrackerDevice::calibrateAllCamera()
       // }
       //
       // else
-				  cout << "Camera is NOT calibrated" << endl;
 			}
 			trackCams[i]->VideoPuffer.push_back(trackCams[i]->camProxy->lastImageTaken->clone());
+		}
+	}
+	cout << "End of calbiration" << endl;
+	for (unsigned int i = 0; i < trackCams.size(); i++)
+	{
+		if (trackCams[i]->isCalibrated)
+		{
+			cout << "Camera "<<i<<" is calibrated" << endl;
+		}
+		else
+		{
+			cout << "Camera " << i << " is NOT calibrated" << endl;
 		}
 	}
 
