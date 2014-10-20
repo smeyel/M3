@@ -15,16 +15,17 @@ int main()
 	
 	bool running = true;
 	int frameIdx = 0;
-	LogConfigTime::StdoutLogger logger;
+//	LogConfigTime::StdoutLogger logger;
 
 	PhoneProxy proxy;
-	cout << "Connecting..." << endl;
 	//const char* host = "192.168.0.8";
 	//const char* host = "127.0.0.1";
 	const char* host = "192.168.1.107";
 //	const char* host = "152.66.159.87";
 	const int port = 6000;
-	proxy.Connect(host, port);
+
+//	cout << "Connecting..." << endl;
+//	proxy.Connect(host, port);
 
 	cv::Mat image(480, 640, CV_8UC3);
 	while (running)
@@ -33,6 +34,9 @@ int main()
 		
 		for(int i = 0; ; i++)
 		{
+			cout << "Connecting..." << endl;
+			proxy.Connect(host, port);
+
 			cout << "Requesing image..." << endl;
 			
 			proxy.RequestPhoto(0);
