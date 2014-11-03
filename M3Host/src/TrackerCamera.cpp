@@ -64,6 +64,7 @@ bool TrackerCamera::calibrate()
 	if (camProxy->CaptureAndTryCalibration(true))
 	{
 		imshow(TrackerCameraName, *camProxy->lastImageTaken);
+    isCalibrated = true;
 		return true;
 	}
 	else

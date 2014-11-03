@@ -86,8 +86,8 @@ void LaserScanner::startTracking(){
 	
 	while (1){
 	
-		for (unsigned int i = 0; i < trackCams.size(); i++){
-			trackCams[i]->processFrame();
+		for (auto &it : trackCams){
+			it->processFrame();
 		}
 
 		make3DCoords();

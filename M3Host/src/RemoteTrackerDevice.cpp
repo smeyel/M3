@@ -35,15 +35,17 @@ bool RemoteTrackerDevice::init(const char* initFile){
 void RemoteTrackerDevice::connectToAllCamera(){
 	for (unsigned int i = 0; i < trackCams.size(); i++){
 		trackCams[i]->connect();
-    trackCams[i]->camProxy->chessboarddetector->chessboard.boardSize.width = 7;
+    trackCams[i]->camProxy->chessboarddetector->chessboard.boardSize.width = 6;
     trackCams[i]->camProxy->chessboarddetector->chessboard.boardSize.height = 5;
 	}
 }
 
 void RemoteTrackerDevice::calibrateAllCamera()
 {
-	for (unsigned int j = 0; j < 10; j++)
+  unsigned isAllCalibrated = 0;
+  while (isAllCalibrated != ((1 << trackCams.size()) - 1 ) )
 	{
+   
 		for (unsigned int i = 0; i < trackCams.size(); i++){
      //char fname[20];
      //sprintf_s(fname, 19, "Tmatrix_%d.xml", i);
@@ -70,7 +72,9 @@ void RemoteTrackerDevice::calibrateAllCamera()
       //
       // else
 				  cout << "Camera is NOT calibrated" << endl;
+          
 			}
+      isAllCalibrated |=  trackCams[i]->isCalibrated << i;
 			trackCams[i]->VideoPuffer.push_back(trackCams[i]->camProxy->lastImageTaken->clone());
 		}
 	}

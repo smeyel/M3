@@ -45,7 +45,7 @@ public:
 	/*
 	Tells if the camera is calibrated.
 	*/
-	bool isCalibrated;
+	bool isCalibrated = false;
 
 	/*
 	Used in processing to know if we initialized already.
