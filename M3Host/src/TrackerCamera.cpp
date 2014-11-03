@@ -9,6 +9,7 @@ TrackerCamera::TrackerCamera()
 	tracker = NULL;
 	running = false;
 	saveToFile = false;
+	isCalibrated = false;
 }
 
 bool TrackerCamera::init(const char* cameraInitFileName, const char* trackerInitFileName){
