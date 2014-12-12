@@ -16,7 +16,7 @@ bool TrackerCamera::init(const char* cameraInitFileName, const char* trackerInit
 	camProxy = new CameraRemoteProxy();
 	this->needinit = true;
 	bool initialized = true;
-		if (!camProxy->camera->loadCalibrationData("ps3eye_intrinsics_blu.xml")){
+		if (!camProxy->camera->loadCalibrationData("intrinsic_n8_3.xml")){
 			cout << "Camera calibration failed!!" << endl;
 			initialized = false;
 		}
@@ -65,12 +65,13 @@ bool TrackerCamera::calibrate()
 	if (camProxy->CaptureAndTryCalibration(true))
 	{
 		imshow(TrackerCameraName, *camProxy->lastImageTaken);
-    isCalibrated = true;
+		isCalibrated = true;
 		return true;
 	}
 	else
 	{
 		imshow(TrackerCameraName, *camProxy->lastImageTaken);
+		isCalibrated = false;
 		return false;
 	}
 }

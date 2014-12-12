@@ -7,7 +7,7 @@
 
 #include <opencv2/opencv.hpp>
 
-#define MULTITHREAD_MODE  //!!!! Uncomment this to enable multithread mode
+//#define MULTITHREAD_MODE  //!!!! Uncomment this to enable multithread mode
 
 
 

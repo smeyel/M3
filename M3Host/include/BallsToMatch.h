@@ -6,7 +6,7 @@
 class BallsToMatch : public ObjectsToMatch
 {
 public:
-	vector<Ball>* BallData;
+	map<int,Point3i>* BallData;
 	BallsToMatch();
 	~BallsToMatch();
 };

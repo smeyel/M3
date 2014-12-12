@@ -17,10 +17,6 @@
   <data>
     7.8915087950353848e+002 0. 3.1950000000000000e+002 0.
     7.8915087950353848e+002 2.3950000000000000e+002 0. 0. 1.</data></Camera_Matrix>
-<Camera_Resolution>
-	<Width>640</Width>
-	<Height>480</Height>
-</Camera_Resolution>
 <Distortion_Coefficients type_id="opencv-matrix">
   <rows>5</rows>
   <cols>1</cols>
@@ -28,6 +24,10 @@
   <data>
     -1.3192279080656072e-001 1.5252294913865913e-001 0. 0.
     -1.1150728065600448e+000</data></Distortion_Coefficients>
+	<Camera_Resolution>
+	<Width>640</Width>
+	<Height>480</Height>
+</Camera_Resolution>
 <Avg_Reprojection_Error>7.7578825241840266e-001</Avg_Reprojection_Error>
 <Per_View_Reprojection_Errors type_id="opencv-matrix">
   <rows>25</rows>

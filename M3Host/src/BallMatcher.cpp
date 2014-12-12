@@ -6,7 +6,7 @@ BallMatcher::BallMatcher(vector<Camera*> cameras, vector<ObjectsToMatch*> object
 {
 	for (int i = 0; i < objectsToMatch.size(); i++)
 	{
-		BallsToMatchData.push_back(((BallsToMatch*)(objectsToMatch[i]))->BallData);
+		detectedBalls.push_back(((BallsToMatch*)(objectsToMatch[i]))->BallData);
 	}
 }
 
@@ -25,34 +25,91 @@ void BallMatcher::init(const char *configfilename)
 
 }
 
+
+int BallMatcher::SquareDistance(Point2i& First, Point2i& Second)
+{
+//	cout << (First.x - Second.x)*(First.x - Second.x) + (First.y - Second.y)*(First.y - Second.y) << endl;
+	return (First.x - Second.x)*(First.x - Second.x) + (First.y - Second.y)*(First.y - Second.y);
+}
+
+bool sortDistances(Point3i ball1, Point3i ball2)
+{
+	return ball1.z < ball2.z;
+}
+
 void BallMatcher::MatchBalls()
 {
-	for (int i = 0, j = 0; i < BallsToMatchData[0]->size(); i++)
+	vector < Point3i> distances;
+	vector<Point2i> usedBalls;
+	for (map<int, Point3i>::iterator it0 = detectedBalls[0]->begin(); it0 != detectedBalls[0]->end(); it0++)
 	{
-		if ((*BallsToMatchData[0])[i].GetVisible())
+		
+		for (map<int, Point3i>::iterator it1 = detectedBalls[1]->begin(); it1 != detectedBalls[1]->end(); it1++)
 		{
-			for (; j < BallsToMatchData[1]->size(); j++)
+			Ray ray0 = cameras[0]->pointImg2World(Point2f(it0->second.x, it0->second.y));
+			Ray ray1 = cameras[1]->pointImg2World(Point2f(it1->second.x, it1->second.y));
+			vector<Ray> rays;
+			rays.push_back(ray0);
+			rays.push_back(ray1);
+			Matx41f worldPoint = Ray::getIntersection(rays, 0);
+			Point2i ball0 = Point2i((cameras[0]->pointWorld2Img(worldPoint)));
+			Point2i ball1 = Point2i((cameras[1]->pointWorld2Img(worldPoint)));
+		//	cout << it0->first << " - " << it1->first << " world: " << worldPoint(0) << " " << worldPoint(1) << " " << worldPoint(2);
+			distances.push_back(Point3i(it0->first, it1->first, SquareDistance(ball0, Point2i(it0->second.x, it0->second.y)) + SquareDistance(ball1, Point2i(it1->second.x, it1->second.y))));
+			
+		}
+
+	}
+	sort(distances.begin(), distances.end(), sortDistances);
+	for (int i = 0; i < distances.size(); i++)
+	{
+		bool used = false;
+		for (int j = 0; j < usedBalls.size(); j++)
+		{
+			if (distances[i].x == usedBalls[j].x || distances[i].y == usedBalls[j].y)
 			{
-				if ((*BallsToMatchData[1])[j].GetVisible())
-				{
-					vector<int> temp;
-					temp.push_back(i);
-					temp.push_back(j);
-					PairIndexes.push_back(temp);
-					j++;
-					break;
-				}
+				used = true;
+				break;
 			}
 		}
+		if (used == false)
+		{
+			pairedBalls.emplace(distances[i].x, distances[i].y);
+			usedBalls.push_back(Point2i(distances[i].x, distances[i].y));
+		}
 	}
+
+	//Another matcher implementation in visibility order
+
+	/*for (map<int, Point3i>::iterator it0 = detectedBalls[0]->begin(), it1 = detectedBalls[1]->begin(); it0 != detectedBalls[0]->end(); it0++)
+	{
+		if(it1 != detectedBalls[1]->end())
+		{
+			pairedBalls.emplace(it0->first, it1->first);
+			it1++;
+		}
+	}*/
 }
 
 void BallMatcher::DrawOnImages()
 {
-	for (int i = 0; i < PairIndexes.size(); i++)
+	int i = 0;
+	for (map<int, Point3i>::iterator it0 = detectedBalls[0]->begin(); it0 != detectedBalls[0]->end(); it0++,i++)
 	{
-		circle(*images[0], Point((*BallsToMatchData[0])[PairIndexes[i][0]].GetPosition()), (*BallsToMatchData[0])[PairIndexes[i][0]].GetRadius(), Scalar((30 * i) % 256, (60 * i) % 256, (90 * i) % 256), -1);
-		circle(*images[1], Point((*BallsToMatchData[1])[PairIndexes[i][1]].GetPosition()), (*BallsToMatchData[1])[PairIndexes[i][1]].GetRadius(), Scalar((30 * i) % 256, (60 * i) % 256, (90 * i) % 256), -1);
+		if (pairedBalls.find(it0->first) != pairedBalls.end())
+		{
+			Ray ray0 = cameras[0]->pointImg2World(Point2f(it0->second.x, it0->second.y));
+			Ray ray1 = cameras[1]->pointImg2World(Point2f((*detectedBalls[1])[pairedBalls[it0->first]].x, (*detectedBalls[1])[pairedBalls[it0->first]].y));
+			vector<Ray> rays;
+			rays.push_back(ray0);
+			rays.push_back(ray1);
+			Matx41f worldPoint = Ray::getIntersection(rays, 0);
+			Point2f ball0(cameras[0]->pointWorld2Img(worldPoint));
+			Point2f ball1(cameras[1]->pointWorld2Img(worldPoint));
+
+			circle(*images[0], ball0, 10, Scalar((30 * i) % 256, (60 * i) % 256, (90 * i) % 256), -1);
+			circle(*images[1], ball1, 10, Scalar((30 * i) % 256, (60 * i) % 256, (90 * i) % 256), -1);
+		}
 	}
 	imshow(*names[0], *images[0]);
 	imshow(*names[1], *images[1]);
@@ -60,8 +117,7 @@ void BallMatcher::DrawOnImages()
 }
 void BallMatcher::MatchObjects()
 {
-	LastPairIndexes = PairIndexes;
-	PairIndexes.erase(PairIndexes.begin(), PairIndexes.end());
+	pairedBalls.clear();
 	MatchBalls();
 	DrawOnImages();
 }

@@ -12,6 +12,8 @@ using namespace cv;
 
 class BallMatcher : public ObjectMatcher
 {
+	map<int, int> pairedBalls;
+	vector<map<int,Point3i>*> detectedBalls;
 	vector<vector<Ball>*> BallsToMatchData;
 	vector<vector<int>> LastPairIndexes;
 	vector<vector<int>> PairIndexes;
@@ -22,6 +24,7 @@ public:
 	void MatchBalls();
 	void DrawOnImages();
 	void MatchObjects();
+	int SquareDistance(Point2i&, Point2i&);
 	~BallMatcher();
 };
 

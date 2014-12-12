@@ -26,7 +26,7 @@ void BallTracker::init(const char *configfilename){
 	UseKalmanFilter = config.UseKalmanFilter;
 	BallsSearchContours = config.BallsSearchContours;
 
-	BallsToMatchData.BallData = &Balls;
+	BallsToMatchData.BallData = &detectedBalls;
 
 	return;
 }
@@ -197,6 +197,7 @@ bool BallTracker::CollisionDetection(Point2i &center, int &radius, int &ClosestV
 				minEnclosingCircle(SeparatedContours[i], center, radius);
 				cv::circle(fortesting, center, radius, Scalar(0, 255, 0), 2);
 				Balls[BallsInCollision[i]].UpdateData((int)center.x, (int)center.y, Balls[BallsInCollision[i]].GetRadius());
+				detectedBalls.emplace(BallsInCollision[i], Point3i((int)center.x, (int)center.y, Balls[BallsInCollision[i]].GetRadius()));
 			}
 
 		}
@@ -226,7 +227,8 @@ void BallTracker::MatchBallsWithContours(Mat &fortesting)
 				if (ClosestVisibleBall!=-1 && !CollisionDetection(ContourCenter[ClosestContour], ContourRadius[ClosestContour], ClosestVisibleBall, ClosestContour, fortesting))
 				{
 					Balls[i].UpdateData(ContourCenter[ClosestContour].x, ContourCenter[ClosestContour].y, ContourRadius[ClosestContour]);
-					circle(fortesting, ContourCenter[ClosestContour], ContourRadius[ClosestContour], Scalar(255, 0, 0), 2); // for testing
+					detectedBalls.emplace(i, Point3i(ContourCenter[ClosestContour].x, ContourCenter[ClosestContour].y, ContourRadius[ClosestContour]));
+					circle(fortesting, ContourCenter[ClosestContour], ContourRadius[ClosestContour], Scalar(0, 0, 255), 2); // for testing
 				}
 				Contours.erase(Contours.begin() + ClosestContour);
 				ContourCenter.erase(ContourCenter.begin() + ClosestContour);
@@ -239,7 +241,8 @@ void BallTracker::MatchBallsWithContours(Mat &fortesting)
 	{
 		Ball NewBall(ContourCenter[i].x, ContourCenter[i].y, ContourRadius[i],UseKalmanFilter);
 		Balls.push_back(NewBall);
-		circle(fortesting, ContourCenter[i], ContourRadius[i], Scalar(255, 0, 0), 2); // for testing
+		detectedBalls.emplace(Balls.size() - 1, Point3i(ContourCenter[i].x, ContourCenter[i].y, ContourRadius[i]));
+		circle(fortesting, ContourCenter[i], ContourRadius[i], Scalar(0, 0, 255), 2); // for testing
 	}
 }
 void BallTracker::MatchContoursWithBalls(Mat& fortesting)
@@ -256,13 +259,18 @@ void BallTracker::MatchContoursWithBalls(Mat& fortesting)
 		{
 			Ball NewBall(ContourCenter[i].x, ContourCenter[i].y, ContourRadius[i],UseKalmanFilter);
 			Balls.push_back(NewBall);
+			detectedBalls.emplace(Balls.size() - 1, Point3i(ContourCenter[i].x, ContourCenter[i].y, ContourRadius[i]));
 		}
 		else
 		{
 			if (!CollisionDetection(ContourCenter[i], ContourRadius[i], ClosestVisibleBall, i, fortesting))
+			{
 				Balls[ClosestVisibleBall].UpdateData(ContourCenter[i].x, ContourCenter[i].y, ContourRadius[i]);
+				detectedBalls.emplace(ClosestVisibleBall, Point3i(ContourCenter[i].x, ContourCenter[i].y, ContourRadius[i]));
+			}
+				
 		}
-		circle(fortesting, ContourCenter[i],ContourRadius[i], Scalar(255, 0, 0), 2); // for testing
+		circle(fortesting, ContourCenter[i],ContourRadius[i], Scalar(0, 0, 255), 2); // for testing
 	}
 }
 
@@ -289,6 +297,7 @@ void BallTracker::ErodeFrame(Mat& img)
 }
 
 void BallTracker::processFrame(Mat& img){
+	detectedBalls.clear();
 	FindBallContoursUsingHSV(img);
 	CalculateContourParams();
 	if (BallsSearchContours) MatchBallsWithContours(img);

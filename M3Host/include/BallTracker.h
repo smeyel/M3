@@ -38,6 +38,7 @@ class BallTracker : public ObjectTracker{
 	-For how many frames it cannot be detected
 	*/
 	vector<Ball> Balls;
+	map<int,Point3i> detectedBalls;
 	//Detection Parameterts
 	Scalar HSVlow;
 	Scalar HSVhigh;

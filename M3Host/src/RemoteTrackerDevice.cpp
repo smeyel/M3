@@ -35,14 +35,16 @@ bool RemoteTrackerDevice::init(const char* initFile){
 void RemoteTrackerDevice::connectToAllCamera(){
 	for (unsigned int i = 0; i < trackCams.size(); i++){
 		trackCams[i]->connect();
-    trackCams[i]->camProxy->chessboarddetector->chessboard.boardSize.width = 6;
-    trackCams[i]->camProxy->chessboarddetector->chessboard.boardSize.height = 5;
+  /*  trackCams[i]->camProxy->chessboarddetector->chessboard.boardSize.width = 4;
+    trackCams[i]->camProxy->chessboarddetector->chessboard.boardSize.height = 5;*/
 	}
 }
 
 void RemoteTrackerDevice::calibrateAllCamera()
 {
-  unsigned isAllCalibrated = 0;
+
+	//Calbirate until all camera is calibrated
+  /*unsigned isAllCalibrated = 0;
   while (isAllCalibrated != ((1 << trackCams.size()) - 1 ) )
 	{
    
@@ -76,19 +78,28 @@ void RemoteTrackerDevice::calibrateAllCamera()
       isAllCalibrated |=  trackCams[i]->isCalibrated << i;
 			trackCams[i]->VideoPuffer.push_back(trackCams[i]->camProxy->lastImageTaken->clone());
 		}
-	}
+	}*/
+
+	//Calbirate for fix frames
+  for (int i = 0; i < 10; i++)
+  {
+	  for (unsigned int j = 0; j < trackCams.size(); j++)
+	  {
+
+			  trackCams[j]->isCalibrated = trackCams[j]->calibrate();
+			  trackCams[j]->VideoPuffer.push_back(trackCams[j]->camProxy->lastImageTaken->clone());
+		  if (trackCams[j]->isCalibrated)
+		  {
+			  cout << "Camera " << j << " is calibrated" << endl;
+		  }
+		  else
+		  {
+			  cout << "Camera " << j << " is NOT calibrated" << endl;
+		  }
+	  }
+
+  }
 	cout << "End of calbiration" << endl;
-	for (unsigned int i = 0; i < trackCams.size(); i++)
-	{
-		if (trackCams[i]->isCalibrated)
-		{
-			cout << "Camera "<<i<<" is calibrated" << endl;
-		}
-		else
-		{
-			cout << "Camera " << i << " is NOT calibrated" << endl;
-		}
-	}
 
 }
 
